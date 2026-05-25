@@ -1,0 +1,611 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Lokkygoat Chat</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    #backdrop {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 12, 20, 0.55);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    #panel {
+      width: min(1000px, 92vw);
+      height: 82vh;
+      border-radius: 24px;
+      background: rgba(17, 24, 39, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 35px rgba(168, 85, 247, 0.15);
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Sidebar Styles */
+    #sidebar {
+      width: 320px;
+      background: rgba(15, 20, 32, 0.98);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .sb-profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sb-avatar-container {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .sb-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #22d3ee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+      animation: pulseAvatar 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseAvatar {
+      0%, 100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(34, 211, 238, 0.6); }
+    }
+
+    .sb-status-dot {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #10b981;
+      border: 2px solid #0f1420;
+    }
+
+    .sb-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: #f3e8ff;
+      margin: 0 0 4px 0;
+    }
+
+    .sb-subtitle {
+      font-size: 12px;
+      color: #9ca3af;
+      margin: 0;
+    }
+
+    .sb-stats {
+      margin-top: 24px;
+      flex: 1;
+    }
+
+    .sb-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #a855f7;
+      margin-bottom: 14px;
+    }
+
+    .sb-stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .sb-stat-label {
+      color: #9ca3af;
+    }
+
+    .sb-stat-val {
+      font-weight: 600;
+      color: #e9d5ff;
+      text-transform: capitalize;
+    }
+
+    .sb-footer {
+      font-size: 11px;
+      color: #6b7280;
+      text-align: center;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Chat Viewport Styles */
+    #chat-viewport {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #0b141a;
+      position: relative;
+    }
+
+    #chat-viewport::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath fill-rule='evenodd' d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm1-61c3.16 0 6-2.84 6-6s-2.84-6-6-6-6 2.84-6 6 2.84 6 6 6zm-.667 30C26.043 59 19 51.957 19 43.333c0-8.624 7.043-15.667 15.667-15.667 8.624 0 15.667 7.043 15.667 15.667 0 8.624-7.043 15.667-15.667 15.667z'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    #chat-header {
+      height: 60px;
+      background: #202d33;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      z-index: 10;
+      -webkit-app-region: drag;
+    }
+
+    .ch-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ch-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e9edef;
+    }
+
+    .ch-status {
+      font-size: 12px;
+      color: #8696a0;
+    }
+
+    .ch-actions {
+      display: flex;
+      gap: 10px;
+      -webkit-app-region: no-drag;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #aebac1;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #e9edef;
+    }
+
+    .btn-close {
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .btn-close:hover {
+      background: rgba(239, 68, 68, 0.25);
+      color: white;
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 2;
+    }
+
+    .msg {
+      max-width: 65%;
+      padding: 9px 14px;
+      border-radius: 12px;
+      font-size: 14.5px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-break: break-word;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #005c4b;
+      color: #e9edef;
+      border-top-right-radius: 0;
+    }
+
+    .assistant {
+      align-self: flex-start;
+      background: #202c33;
+      color: #e9edef;
+      border-top-left-radius: 0;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .system {
+      align-self: center;
+      background: #182229;
+      color: #8696a0;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 8px;
+      padding: 5px 12px;
+      max-width: 80%;
+      text-align: center;
+      box-shadow: none;
+    }
+
+    .msg strong {
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .msg em {
+      color: #a78bfa;
+      font-style: normal;
+    }
+
+    .msg code {
+      font-family: ui-monospace, monospace;
+      font-size: 12.5px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.35);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.15);
+    }
+
+    .msg ul {
+      margin: 6px 0;
+      padding-left: 18px;
+    }
+
+    #composer {
+      height: 70px;
+      background: #202d33;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      z-index: 5;
+    }
+
+    #input {
+      flex: 1;
+      resize: none;
+      height: 42px;
+      border-radius: 20px;
+      border: none;
+      background: #2a3942;
+      color: #e9edef;
+      outline: none;
+      padding: 11px 16px;
+      font-size: 14.5px;
+      box-sizing: border-box;
+    }
+
+    #input::placeholder {
+      color: #8696a0;
+    }
+
+    #send {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: white;
+      font-size: 16px;
+      background: #00a884;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    #send:hover {
+      background: #008f72;
+    }
+
+    #send:active {
+      transform: scale(0.95);
+    }
+
+    #send:disabled {
+      background: #2a3942;
+      color: #8696a0;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="backdrop">
+    <div id="panel">
+      <!-- Left Sidebar -->
+      <div id="sidebar">
+        <div class="sb-profile">
+          <div class="sb-avatar-container">
+            <div class="sb-avatar">🐐</div>
+            <div class="sb-status-dot"></div>
+          </div>
+          <h2 class="sb-name" id="sb-name">Lokkygoat</h2>
+          <p class="sb-subtitle" id="sb-subtitle">Mascota de Escritorio</p>
+        </div>
+
+        <div class="sb-stats">
+          <h3 class="sb-section-title">Parámetros Cabra</h3>
+          <div class="sb-stat-row">
+            <span class="sb-stat-label">Estado</span>
+            <span class="sb-stat-val" id="sb-mood">awake</span>
+          </div>
+          <div class="sb-stat-row">
+            <span class="sb-stat-label">Tamaño</span>
+            <span class="sb-stat-val" id="sb-size">normal</span>
+          </div>
+          <div class="sb-stat-row">
+            <span class="sb-stat-label">Velocidad</span>
+            <span class="sb-stat-val" id="sb-speed">normal</span>
+          </div>
+          <div class="sb-stat-row">
+            <span class="sb-stat-label">Tema Visual</span>
+            <span class="sb-stat-val" id="sb-theme">violeta</span>
+          </div>
+        </div>
+
+        <div class="sb-footer">
+          Lokkygoat v2.0
+        </div>
+      </div>
+
+      <!-- Right Chat Panel -->
+      <div id="chat-viewport">
+        <div id="chat-header">
+          <div class="ch-info">
+            <div class="ch-title" id="chat-title">Lokkygoat Companion</div>
+            <div class="ch-status" id="chat-provider-name">Cargando proveedor...</div>
+          </div>
+          <div class="ch-actions">
+            <button id="minimize" class="btn-action">minimizar</button>
+            <button id="close" class="btn-action btn-close">cerrar</button>
+          </div>
+        </div>
+
+        <div id="messages">
+          <div class="msg system">Conectado a Lokkygoat. Escribe un mensaje para conversar.</div>
+        </div>
+
+        <div id="composer">
+          <textarea id="input" placeholder="Escribe un mensaje aquí…"></textarea>
+          <button id="send">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const messages = document.getElementById("messages");
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+    const closeBtn = document.getElementById("close");
+    const minimizeBtn = document.getElementById("minimize");
+    const backdrop = document.getElementById("backdrop");
+
+    async function init() {
+      await loadSidebarStats();
+      setInterval(loadSidebarStats, 3000);
+    }
+    init();
+
+    closeBtn.addEventListener("click", () => {
+      window.electronAPI?.closeChat?.();
+    });
+
+    minimizeBtn.addEventListener("click", () => {
+      window.electronAPI?.hideChat?.();
+    });
+
+    backdrop.addEventListener("click", (e) => {
+      if (e.target === backdrop) {
+        window.electronAPI?.hideChat?.();
+      }
+    });
+
+    async function loadSidebarStats() {
+      try {
+        if (!window.electronAPI || !window.electronAPI.getCompanionState) return;
+        const data = await window.electronAPI.getCompanionState();
+        if (!data.ok && data.error === "Hermes is offline") {
+          document.getElementById("chat-provider-name").textContent = "Hermes (Desconectado)";
+          document.getElementById("sb-mood").textContent = "offline";
+          return;
+        }
+        
+        const conf = data.config || {};
+        document.getElementById("sb-name").textContent = conf.name || "Cabra";
+        document.getElementById("sb-speed").textContent = conf.movement_speed || "normal";
+        document.getElementById("sb-size").textContent = conf.size || "normal";
+        document.getElementById("sb-theme").textContent = conf.theme || "violeta";
+        document.getElementById("sb-mood").textContent = data.mood || "awake";
+
+        const providerNames = {
+          ollama: "Ollama (Local)",
+          openai: "OpenAI ChatGPT",
+          claude: "Anthropic Claude",
+          hermes: "Hermes Core",
+          openclaw: "OpenClaw Proxy",
+          codex: "Codex Engine",
+          custom: "Custom API"
+        };
+        const activeProv = conf.provider || "ollama";
+        document.getElementById("chat-provider-name").textContent = providerNames[activeProv] || activeProv;
+        document.getElementById("sb-subtitle").textContent = "Mascota AI (" + (providerNames[activeProv] || activeProv) + ")";
+      } catch (_) {}
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function parseInlineMarkdown(html) {
+      html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+      html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      html = html.replace(/(^|\s)\*([^*]+)\*(?=\s|$|[.,!?])/g, "$1<em>$2</em>");
+      return html;
+    }
+
+    function renderMarkdownLite(text) {
+      let lines = text.split("\n");
+      let inList = false;
+      let processedLines = [];
+
+      for (let line of lines) {
+        let trimmed = line.trim();
+        if (trimmed.startsWith("- ")) {
+          let content = trimmed.substring(2);
+          let htmlContent = parseInlineMarkdown(escapeHtml(content));
+          if (!inList) {
+            inList = true;
+            processedLines.push("<ul>");
+          }
+          processedLines.push("<li>" + htmlContent + "</li>");
+        } else {
+          if (inList) {
+            inList = false;
+            processedLines.push("</ul>");
+          }
+          let htmlContent = parseInlineMarkdown(escapeHtml(line));
+          processedLines.push(htmlContent);
+        }
+      }
+      if (inList) {
+        processedLines.push("</ul>");
+      }
+      
+      let finalHtml = "";
+      for (let i = 0; i < processedLines.length; i++) {
+        let curr = processedLines[i];
+        if (curr === "<ul>" || curr === "</ul>" || curr.startsWith("<li>")) {
+          finalHtml += curr;
+        } else {
+          if (i > 0 && processedLines[i-1] !== "</ul>" && processedLines[i-1] !== "<ul>" && !processedLines[i-1].startsWith("<li>")) {
+            finalHtml += "<br>" + curr;
+          } else {
+            finalHtml += curr;
+          }
+        }
+      }
+      return finalHtml;
+    }
+
+    function addMessage(role, text) {
+      const el = document.createElement("div");
+      el.className = `msg ${role}`;
+      el.innerHTML = renderMarkdownLite(text);
+      messages.appendChild(el);
+      messages.scrollTop = messages.scrollHeight;
+      return el;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text || send.disabled) return;
+
+      input.value = "";
+      addMessage("user", text);
+
+      send.disabled = true;
+      const thinking = addMessage("assistant", "Pensando…");
+      
+      if (window.electronAPI && window.electronAPI.notifySentMessage) {
+        await window.electronAPI.notifySentMessage();
+      }
+
+      try {
+        if (!window.electronAPI || !window.electronAPI.sendChatMessage) {
+          throw new Error("electronAPI no disponible en preload");
+        }
+        const reply = await window.electronAPI.sendChatMessage(text);
+        thinking.innerHTML = renderMarkdownLite(String(reply));
+      } catch (e) {
+        thinking.innerHTML = "No pude conectar con el proveedor: " + e.message;
+      } finally {
+        send.disabled = false;
+        
+        if (window.electronAPI && window.electronAPI.notifyResponseReady) {
+          await window.electronAPI.notifyResponseReady();
+        }
+        
+        input.focus();
+        messages.scrollTop = messages.scrollHeight;
+      }
+    }
+
+    send.addEventListener("click", sendMessage);
+
+    input.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter" && !ev.shiftKey) {
+        ev.preventDefault();
+        sendMessage();
+      }
+      if (ev.key === "Escape") {
+        window.electronAPI?.hideChat?.();
+      }
+    });
+
+    window.addEventListener("focus", () => {
+      setTimeout(() => input.focus(), 150);
+    });
+
+    setTimeout(() => input.focus(), 250);
+  </script>
+</body>
+</html>

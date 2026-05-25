@@ -1,0 +1,13 @@
+{
+  "name": "lokkygoat",
+  "version": "2.0.0",
+  "description": "Lokkygoat - Mascota de Escritorio Tamagotchi Decoplada y Multiproveedor",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^29.4.6"
+  }
+}
+

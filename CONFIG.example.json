@@ -1,0 +1,13 @@
+{
+  "name": "Cabra",
+  "size": "normal",
+  "movement_speed": "normal",
+  "theme": "violeta",
+  "quiet_mode": false,
+  "provider": "ollama",
+  "apiKey": "",
+  "apiUrl": "http://127.0.0.1:11434",
+  "model": "llama3",
+  "memory_count": 0,
+  "skill_count": 0
+}

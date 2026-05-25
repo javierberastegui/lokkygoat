@@ -9,38 +9,42 @@ Para historial de etapas, usar el log del dominio.
 
 ## Estado actual
 
-- La interfaz visual de la mascota Goatky es un cyber-goat bot demoníaco asentado en el suelo con gravedad y peso.
-- Camina a velocidad visible (0.8-2.2 px por tick), salta y vuela en periodos cortos, regresando al suelo de forma natural.
-- El warp se ha reducido enormemente para mantener la fidelidad de una mascota física y viva.
+- La interfaz visual de Goatky ahora es una entidad de nebulosa oscura con humo negro, brillos violeta/rosa, retícula orbital, ojos rasgados y sonrisa pícara inspirada en la referencia aportada por el usuario.
+- Se conservan los contratos del SVG y del JS de `pet.html` para que sueño, estados operativos, respuesta lista, warp y física sigan funcionando.
+- Camina, salta, vuela y cambia de estado mediante las clases físicas ya existentes, sin cambiar `src/pet/petPhysics.js`.
 
 ## Qué quedó ya hecho
 
-- Eliminación del aspecto Pikachu (antenas reducidas a pequeños puertos laterales).
-- Cuernos curvos y oscuros con silueta de cabra.
-- Silueta de cabeza octogonal/cyber y visor hexagonal agresivo con ojos rasgados de LED.
-- Cascos robóticos claros y definidos.
-- Sombra en el suelo (`#pet-shadow`) dinámica controlada por CSS según el estado de la física.
-- Eliminación de la flotación por defecto del contenedor para permitir un caminar realista.
-- Velocidades de caminata perceptibles (entre 0.8 y 2.2 px por tick).
-- Probabilidades de comportamiento y cooldown para warp (1% probabilidad, min 60s cooldown).
+- Sustitución del cuerpo de cabra-bot por una masa abstracta de humo/nebulosa en SVG.
+- Conservación de los selectores críticos: `#goatky-character`, `.eyes-open`, `.eyes-closed`, `#mouth-open`, `#mouth-closed`, `#left-arm`, `#right-arm`, `#left-leg`, `#right-leg`, `#goat-tail`, `#thruster-flame` y `#pet-shadow`.
+- Integración de filtros SVG de blur/glow, gradientes radiales, órbitas HUD y líneas de retícula para acercarse a la estética de la imagen de referencia.
+- Paleta por estados mantenida: `idle`, `thinking`, `executing`, `success`, `error`, `sleep`.
+- Log de frontend actualizado en `doc/logs/frontend/mascota_flotante.md`.
 
 ## Qué no quedó hecho
 
-- El badge de estado (`status-badge`) sigue flotando externamente en la esquina superior; se mantiene como deuda integrarlo en el visor.
+- Validación visual runtime en Electron local.
+- El badge de estado (`status-badge`) sigue flotando externamente en la esquina superior; se mantiene como deuda integrarlo dentro de la composición visual.
+- No se generó ni incorporó un asset raster basado en la referencia; el avatar quedó como SVG propio editable.
 
 ## Riesgos o trampas conocidas
 
-- Si se altera la posición de la sombra en el SVG (`#pet-shadow`), debe cuidarse la sincronización con el punto de contacto de los cascos al final del recorrido vertical.
+- La nueva composición nebular usa filtros SVG intensivos; si se detecta consumo alto en equipos modestos, reducir `stdDeviation` en `smokeBlur`, `voidBlur` y `nebulaGlow`.
+- Si las animaciones físicas deforman demasiado ojos o sonrisa, ajustar `transform-origin` de `#pet` y `#goatky-character` antes de tocar `petPhysics.js`.
+- Si se altera `#pet-shadow`, cuidar que siga funcionando con los estados `physics-hop`, `physics-fly` y `physics-dash`.
 
 ## Archivos clave a leer
 
 - `pet.html`
 - `src/pet/petPhysics.js`
+- `doc/logs/frontend/mascota_flotante.md`
 
 ## Validaciones pendientes
 
-- Verificar comportamiento de caída en resoluciones de pantalla extremadamente pequeñas.
+- Ejecutar `npm start` en entorno local y validar visualmente la mascota flotante.
+- Comprobar click para abrir chat, botón de ajustes, botón de cierre, `thinking`, `response-ready`, sueño, warp y movimiento físico.
+- Verificar comportamiento en resoluciones pequeñas.
 
 ## Siguiente micro-paso recomendado
 
-- Agregar un sutil efecto de rebote elástico en el cuerpo completo de Goatky cuando aterriza después de un vuelo o un salto.
+- Arrancar Lokkygoat localmente y ajustar proporciones/blur si la nebulosa se ve demasiado compacta o si la ventana flotante recorta los lóbulos externos.

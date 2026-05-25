@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Hermes Pet</title>
+  <title>Lokkygoat / Goatky</title>
   <style>
     html, body {
       margin: 0;
@@ -39,13 +39,13 @@
       max-width: 205px;
       padding: 8px 12px;
       border-radius: 18px;
-      background: rgba(17, 24, 39, .92);
-      border: 1px solid rgba(168, 85, 247, .35);
-      color: #f9fafb;
+      background: rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      color: #f8fafc;
       font-size: 12px;
       line-height: 1.25;
       text-align: center;
-      box-shadow: 0 10px 26px rgba(2,6,23,.35);
+      box-shadow: 0 10px 26px rgba(2, 6, 23, 0.45);
       z-index: 2;
       pointer-events: none;
     }
@@ -58,23 +58,22 @@
       transform: translateX(-50%);
       width: 18px;
       height: 18px;
-      background: rgba(17, 24, 39, .92);
+      background: rgba(15, 23, 42, 0.94);
       clip-path: polygon(50% 100%, 0 0, 100% 0);
     }
 
-
     :root {
-      --glow-color: rgba(168, 85, 247, 0.8);
+      --glow-color: rgba(34, 211, 238, 0.8);
       --float-duration: 4s;
       --spin-r1-duration: 14s;
       --spin-r2-duration: 10s;
       --spin-r3-duration: 3s;
-      --ring1-color: #7c3aed;
-      --ring2-color: #a855f7;
-      --ring3-color: #22d3ee;
-      --core-stroke: #a855f7;
-      --core-fill: rgba(88, 28, 135, 0.42);
-      --face-color: #f5d0fe;
+      --ring1-color: #0891b2;
+      --ring2-color: #22d3ee;
+      --ring3-color: #a5f3fc;
+      --core-stroke: #06b6d4;
+      --core-fill: rgba(22, 78, 99, 0.42);
+      --face-color: #cffafe;
     }
 
     #pet-float-container {
@@ -137,7 +136,7 @@
     }
 
     #pet.dashing {
-      filter: brightness(1.1) !important;
+      filter: brightness(1.15) drop-shadow(0 0 25px var(--ring2-color)) !important;
     }
 
     #pet.glow-bright {
@@ -155,6 +154,34 @@
       overflow: visible;
     }
 
+    /* Cyber Droid Stylings */
+    .droid-body {
+      fill: #f8fafc;
+      stroke: #cbd5e1;
+      stroke-width: 3.5;
+      stroke-linejoin: round;
+    }
+
+    .droid-joints {
+      fill: #475569;
+      stroke: #334155;
+      stroke-width: 2;
+    }
+
+    .droid-visor {
+      fill: #0f172a;
+      stroke: #1e293b;
+      stroke-width: 2.5;
+    }
+
+    .droid-visor-reflection {
+      stroke: rgba(255, 255, 255, 0.12);
+      stroke-width: 1.5;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    /* Rings and Effects */
     .ring1 { stroke: var(--ring1-color); animation: spin var(--spin-r1-duration) linear infinite; transform-origin: 50% 50%; transition: stroke 0.5s ease; }
     .ring2 { stroke: var(--ring2-color); animation: spinReverse var(--spin-r2-duration) linear infinite; transform-origin: 50% 50%; transition: stroke 0.5s ease; }
     .ring3 { stroke: var(--ring3-color); animation: pulse var(--spin-r3-duration) ease-in-out infinite; transform-origin: 50% 50%; transition: stroke 0.5s ease; }
@@ -230,10 +257,11 @@
       left: 50%;
       bottom: 10px;
       transform: translateX(-50%);
-      color: rgba(216, 180, 254, .85);
+      color: rgba(34, 211, 238, 0.85);
       font-size: 10px;
+      font-weight: bold;
       letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(168,85,247,.8);
+      text-shadow: 0 0 10px rgba(34, 211, 238, 0.8);
       pointer-events: none;
     }
 
@@ -268,8 +296,8 @@
     }
 
     @keyframes corePulse {
-      0%, 100% { filter: drop-shadow(0 0 4px #a855f7); }
-      50% { filter: drop-shadow(0 0 12px #22d3ee); }
+      0%, 100% { filter: drop-shadow(0 0 4px var(--core-stroke)); }
+      50% { filter: drop-shadow(0 0 12px var(--ring3-color)); }
     }
 
     @keyframes spinOnce {
@@ -279,7 +307,7 @@
 
     @keyframes coreGlowFlash {
       0%, 100% { filter: drop-shadow(0 0 18px var(--glow-color)); }
-      50% { filter: drop-shadow(0 0 35px #22d3ee); }
+      50% { filter: drop-shadow(0 0 35px var(--ring3-color)); }
     }
 
     @keyframes idleBreath {
@@ -456,41 +484,86 @@
 <body>
   <div id="stage">
     <div id="wrap">
-      <div id="close-pet" title="Cerrar cabra">×</div>
+      <div id="close-pet" title="Cerrar Goatky">×</div>
       <div id="settings-pet" title="Ajustes">⚙</div>
       <div id="status-badge" class="hidden">?</div>
-      <div id="bubble">Tócame para hablar 👾</div>
+      <div id="bubble">Sistemas en línea. Tócame 👾</div>
       <canvas id="canvas-fx"></canvas>
       <div id="pet-float-container">
         <div id="pet">
-        <svg viewBox="0 0 220 220">
-          <circle class="radar-orbit" cx="110" cy="110" r="101"/>
-          <path class="radar-sweep" d="M110 110 L110 8 A102 102 0 0 1 198 59 Z"/>
-          <line class="sweep-line" x1="110" y1="110" x2="110" y2="5"/>
-          <circle class="particle" cx="52" cy="78" r="3.4"/>
-          <circle class="particle" cx="176" cy="96" r="3" style="animation-delay: .35s"/>
-          <circle class="particle" cx="75" cy="172" r="2.8" style="animation-delay: .7s"/>
-          <circle class="particle" cx="156" cy="168" r="2.6" style="animation-delay: 1.05s"/>
-          <circle class="ring1" cx="110" cy="110" r="82" fill="none" stroke-width="3" stroke-dasharray="32 18" opacity=".75"/>
-          <circle class="ring2" cx="110" cy="110" r="62" fill="none" stroke-width="3" stroke-dasharray="18 12" opacity=".95"/>
-          <circle class="ring3" cx="110" cy="110" r="94" fill="none" stroke-width="1.5" stroke-dasharray="4 18" opacity=".55"/>
-          <polygon class="core" points="110,54 158,82 158,138 110,166 62,138 62,82" stroke-width="5"/>
-          
-          <!-- Ojos abiertos -->
-          <g class="eyes-open">
-            <circle class="face-el" cx="94" cy="112" r="7"/>
-            <circle class="face-el" cx="126" cy="112" r="7"/>
-          </g>
-          <!-- Ojos cerrados -->
-          <g class="eyes-closed" style="display: none;">
-            <path class="face-el" d="M 87 112 Q 94 118 101 112" fill="none" stroke-width="4" stroke-linecap="round"/>
-            <path class="face-el" d="M 119 112 Q 126 118 133 112" fill="none" stroke-width="4" stroke-linecap="round"/>
-          </g>
-          
-          <!-- Bocas -->
-          <path id="mouth-open" class="face-el" d="M91 135 Q110 151 130 135" fill="none" stroke-width="5" stroke-linecap="round"/>
-          <path id="mouth-closed" class="face-el" d="M98 138 Q110 135 122 138" fill="none" stroke-width="4" stroke-linecap="round" style="display: none;"/>
-        </svg>
+          <svg viewBox="0 0 220 220">
+            <!-- HUD Scanner / Orbit Rings -->
+            <circle class="radar-orbit" cx="110" cy="110" r="101"/>
+            <path class="radar-sweep" d="M110 110 L110 8 A102 102 0 0 1 198 59 Z"/>
+            <line class="sweep-line" x1="110" y1="110" x2="110" y2="5"/>
+            <circle class="particle" cx="52" cy="78" r="3.4"/>
+            <circle class="particle" cx="176" cy="96" r="3" style="animation-delay: .35s"/>
+            <circle class="particle" cx="75" cy="172" r="2.8" style="animation-delay: .7s"/>
+            <circle class="particle" cx="156" cy="168" r="2.6" style="animation-delay: 1.05s"/>
+            <circle class="ring1" cx="110" cy="110" r="82" fill="none" stroke-width="3" stroke-dasharray="32 18" opacity=".75"/>
+            <circle class="ring2" cx="110" cy="110" r="62" fill="none" stroke-width="3" stroke-dasharray="18 12" opacity=".95"/>
+            <circle class="ring3" cx="110" cy="110" r="94" fill="none" stroke-width="1.5" stroke-dasharray="4 18" opacity=".55"/>
+            
+            <!-- GOATKY BODY PARTS -->
+            <!-- Neck Joint -->
+            <polygon class="droid-joints" points="103,130 117,130 114,138 106,138" />
+            
+            <!-- Robot Body/Chest -->
+            <path class="droid-body" d="M 86,136 C 86,136 78,162 110,165 C 142,162 134,136 134,136 Z" />
+            
+            <!-- Droid Thruster Flame -->
+            <polygon points="106,165 114,165 110,172" fill="var(--ring3-color)" opacity="0.8" filter="drop-shadow(0 0 5px var(--ring3-color))" />
+            
+            <!-- Chest Decals: Red Team console symbol (>) and underscore cursor (_) -->
+            <path d="M 93,144 L 97,147 L 93,150" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="99" y1="150" x2="105" y2="150" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" />
+            
+            <!-- Chest power core (inherits operational colors & pulse animation) -->
+            <circle class="core" cx="119" cy="147" r="7" stroke-width="2.5" />
+            
+            <!-- Cybernetic Goat Horns -->
+            <!-- Left Horn -->
+            <path class="droid-body" d="M 88,72 Q 80,45 64,52 Q 76,64 86,76 Z" />
+            <path d="M 84,70 Q 77,48 66,54" fill="none" stroke="var(--ring3-color)" stroke-width="2" stroke-linecap="round" filter="drop-shadow(0 0 3px var(--ring3-color))" />
+            
+            <!-- Right Horn -->
+            <path class="droid-body" d="M 132,72 Q 140,45 156,52 Q 144,64 134,76 Z" />
+            <path d="M 136,70 Q 143,48 154,54" fill="none" stroke="var(--ring3-color)" stroke-width="2" stroke-linecap="round" filter="drop-shadow(0 0 3px var(--ring3-color))" />
+            
+            <!-- Lateral Antennas/Ears -->
+            <!-- Left Antenna -->
+            <path class="droid-joints" d="M 74,95 L 64,93 L 64,103 L 74,101 Z" />
+            <line x1="64" y1="98" x2="48" y2="92" stroke="#64748b" stroke-width="3" stroke-linecap="round" />
+            <circle cx="48" cy="92" r="3.5" fill="var(--ring3-color)" filter="drop-shadow(0 0 4px var(--ring3-color))" />
+            
+            <!-- Right Antenna -->
+            <path class="droid-joints" d="M 146,95 L 156,93 L 156,103 L 146,101 Z" />
+            <line x1="156" y1="98" x2="172" y2="92" stroke="#64748b" stroke-width="3" stroke-linecap="round" />
+            <circle cx="172" cy="92" r="3.5" fill="var(--ring3-color)" filter="drop-shadow(0 0 4px var(--ring3-color))" />
+            
+            <!-- Droid Head Chassis -->
+            <path class="droid-body" d="M 74,90 C 74,70 146,70 146,90 L 146,115 C 146,126 74,126 74,115 Z" />
+            
+            <!-- Visor Segment -->
+            <rect class="droid-visor" x="80" y="86" width="60" height="30" rx="12" ry="12" />
+            <path class="droid-visor-reflection" d="M 85,92 A 8,8 0 0,1 135,92" />
+            
+            <!-- Ojos segmentados / Digital LED segment eyes -->
+            <g class="eyes-open">
+              <rect x="91" y="94" width="7" height="11" rx="2.5" ry="2.5" fill="var(--ring3-color)" filter="drop-shadow(0 0 4px var(--ring3-color))" />
+              <rect x="122" y="94" width="7" height="11" rx="2.5" ry="2.5" fill="var(--ring3-color)" filter="drop-shadow(0 0 4px var(--ring3-color))" />
+            </g>
+            
+            <!-- Ojos cerrados / Sleeping segments (hidden by default) -->
+            <g class="eyes-closed" style="display: none;">
+              <path d="M 89,101 Q 94.5,106 100,101" fill="none" stroke="var(--ring3-color)" stroke-width="3" stroke-linecap="round" filter="drop-shadow(0 0 4px var(--ring3-color))" />
+              <path d="M 120,101 Q 125.5,106 131,101" fill="none" stroke="var(--ring3-color)" stroke-width="3" stroke-linecap="round" filter="drop-shadow(0 0 4px var(--ring3-color))" />
+            </g>
+            
+            <!-- Bocas / LED Mouth displays -->
+            <path id="mouth-open" d="M 103,109 Q 110,113 117,109" fill="none" stroke="var(--ring3-color)" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 0 3px var(--ring3-color))" />
+            <path id="mouth-closed" d="M 105,110 L 115,110" fill="none" stroke="var(--ring3-color)" stroke-width="2.5" stroke-linecap="round" style="display: none;" filter="drop-shadow(0 0 3px var(--ring3-color))" />
+          </svg>
         </div>
       </div> 
       <div id="mood">LIVE</div>
@@ -507,13 +580,13 @@
     let lastOperationalEventId = null;
     let currentOperationalState = "idle";
     let lastSceneState = "idle";
-    let hermesBaseUrl = "http://127.0.0.1:9119";
+    let lokkyBaseUrl = "http://127.0.0.1:9119";
     
     let isSleeping = false;
     let isCelebrating = false;
     let isGlowing = false;
     let isOffline = false;
-    let chatterMode = "normal"; // "normal" o "bajo"
+    let chatterMode = "normal";
     let customStateActive = false;
 
     let currentVx = 0;
@@ -523,7 +596,7 @@
     let currentFlip = 1;
 
     document.getElementById("close-pet").addEventListener("click", (e) => {
-      e.stopPropagation(); // don't open chat
+      e.stopPropagation();
       window.electronAPI?.closeApp?.();
     });
 
@@ -552,8 +625,8 @@
     function setOperationalPalette(state) {
       const root = document.documentElement;
       const palettes = {
-        idle: ["rgba(168, 85, 247, 0.8)", "#7c3aed", "#a855f7", "#22d3ee", "#a855f7", "rgba(88, 28, 135, 0.42)", "#f5d0fe"],
-        thinking: ["rgba(167, 139, 250, 0.9)", "#7c3aed", "#a78bfa", "#67e8f9", "#a78bfa", "rgba(76, 29, 149, 0.48)", "#ede9fe"],
+        idle: ["rgba(34, 211, 238, 0.8)", "#0891b2", "#22d3ee", "#a5f3fc", "#06b6d4", "rgba(22, 78, 99, 0.42)", "#cffafe"],
+        thinking: ["rgba(168, 85, 247, 0.9)", "#7c3aed", "#a855f7", "#e9d5ff", "#a855f7", "rgba(88, 28, 135, 0.42)", "#f5d0fe"],
         executing: ["rgba(34, 211, 238, 1)", "#06b6d4", "#22d3ee", "#a78bfa", "#67e8f9", "rgba(22, 78, 99, 0.72)", "#ecfeff"],
         success: ["rgba(74, 222, 128, 0.95)", "#16a34a", "#4ade80", "#86efac", "#22c55e", "rgba(21, 128, 61, 0.48)", "#dcfce7"],
         error: ["rgba(248, 113, 113, 0.88)", "#dc2626", "#f87171", "#fb7185", "#ef4444", "rgba(127, 29, 29, 0.5)", "#fecaca"],
@@ -646,14 +719,14 @@
       let theme = conf.theme || "violeta";
 
       if (isTranquilo) {
-        root.style.setProperty("--glow-color", "rgba(192, 132, 252, 0.4)");
+        root.style.setProperty("--glow-color", "rgba(100, 116, 139, 0.4)");
         root.style.setProperty("--float-duration", `${8 * sMult}s`);
         root.style.setProperty("--spin-r1-duration", `${28 * sMult}s`);
         root.style.setProperty("--spin-r2-duration", `${20 * sMult}s`);
-        root.style.setProperty("--ring1-color", "#93c5fd");
-        root.style.setProperty("--ring2-color", "#c084fc");
+        root.style.setProperty("--ring1-color", "#64748b");
+        root.style.setProperty("--ring2-color", "#475569");
         root.style.setProperty("--ring3-color", "#cbd5e1");
-        root.style.setProperty("--core-stroke", "#c084fc");
+        root.style.setProperty("--core-stroke", "#64748b");
         root.style.setProperty("--core-fill", "rgba(71, 85, 105, 0.2)");
         root.style.setProperty("--face-color", "#cbd5e1");
         
@@ -689,7 +762,7 @@
           root.style.setProperty("--core-fill", "rgba(22, 78, 99, 0.6)");
           root.style.setProperty("--face-color", "#cffafe");
         } else {
-          // violeta
+          // violeta (Red Team Special Theme)
           root.style.setProperty("--glow-color", "rgba(168, 85, 247, 0.8)");
           root.style.setProperty("--ring1-color", "#7c3aed");
           root.style.setProperty("--ring2-color", "#a855f7");
@@ -708,8 +781,8 @@
       if (isSleeping) return;
       isCelebrating = true;
       pet.classList.add("celebrate");
-      bubble.textContent = "Skill aprendida ⚡";
-      mood.textContent = "LEARNED";
+      bubble.textContent = "Habilidad cargada ⚡";
+      mood.textContent = "LOADED";
       
       const root = document.documentElement;
       root.style.setProperty("--glow-color", "rgba(34, 211, 238, 0.9)");
@@ -725,7 +798,7 @@
       if (isSleeping) return;
       isGlowing = true;
       pet.classList.add("glow-bright");
-      bubble.textContent = "Memoria guardada 👾";
+      bubble.textContent = "Payload memorizado 👾";
       mood.textContent = "MEMORIZED";
       
       setTimeout(() => {
@@ -738,19 +811,19 @@
     function triggerSleep() {
       isSleeping = true;
       mood.textContent = "Zzz...";
-      bubble.textContent = "Zzz… digestión local completada";
+      bubble.textContent = "Goatky durmiendo. Limpieza de buffer.";
       
       const root = document.documentElement;
-      root.style.setProperty("--glow-color", "rgba(100, 116, 139, 0.3)");
+      root.style.setProperty("--glow-color", "rgba(71, 85, 105, 0.3)");
       root.style.setProperty("--float-duration", "12s");
       root.style.setProperty("--spin-r1-duration", "50s");
       root.style.setProperty("--spin-r2-duration", "40s");
-      root.style.setProperty("--ring1-color", "#64748b");
-      root.style.setProperty("--ring2-color", "#475569");
-      root.style.setProperty("--ring3-color", "#334155");
-      root.style.setProperty("--core-stroke", "#475569");
+      root.style.setProperty("--ring1-color", "#475569");
+      root.style.setProperty("--ring2-color", "#334155");
+      root.style.setProperty("--ring3-color", "#1e293b");
+      root.style.setProperty("--core-stroke", "#334155");
       root.style.setProperty("--core-fill", "rgba(15, 23, 42, 0.6)");
-      root.style.setProperty("--face-color", "#475569");
+      root.style.setProperty("--face-color", "#334155");
       
       window.electronAPI?.updateMovementMode?.("pause");
       
@@ -799,18 +872,16 @@
 
         if (isOffline) {
           isOffline = false;
-          bubble.textContent = "¡He vuelto! 👾";
+          bubble.textContent = "¡Sistemas restaurados! 👾";
           setTimeout(() => { if (!isOffline) bubble.textContent = "Tócame para hablar 👾"; }, 2500);
         }
 
         latestState = data;
 
-        // Check if there is a new event to trigger animations
         if (data.last_event_id && data.last_event_id !== lastSeenEventId) {
           const oldEventId = lastSeenEventId;
           lastSeenEventId = data.last_event_id;
 
-          // Only trigger if this is not the initial load of the app
           if (oldEventId !== null) {
             if (data.last_event_type === "dream_cycle") {
               triggerSleep();
@@ -900,7 +971,7 @@
 
     const wormholeParticles = Array.from({ length: 55 }, () => new WormholeParticle());
 
-    let portalState = "inactive"; // "inactive", "entering", "exiting"
+    let portalState = "inactive";
     let portalTime = 0;
     let lastTime = performance.now();
 
@@ -1023,17 +1094,11 @@
     requestAnimationFrame(renderLoop);
 
     async function init() {
-      // Start polling state periodically via IPC
       pollState();
       setInterval(pollState, 3000);
     }
     
     init();
-
-    // Bounce handler from main process
-    window.addEventListener("message", (event) => {
-      // Handle potential message ports if needed
-    });
 
     if (window.electronAPI && window.electronAPI.onSetState) {
       window.electronAPI.onSetState((data) => {
@@ -1153,7 +1218,7 @@
       });
     }
 
-    // Chatter logic
+    // Cybersecurity-themed chatter phrases for Goatky
     setInterval(() => {
       if (customStateActive) return;
       if (isSleeping || isCelebrating || isGlowing || currentOperationalState !== "idle") return;
@@ -1161,39 +1226,38 @@
       const threshold = chatterMode === "bajo" ? 0.90 : 0.70;
       if (Math.random() > threshold) {
         let phrases = [
-          "Vigilando…",
-          "Sistema vivo.",
-          "Hermes listo.",
+          "Escaneando... 👾",
+          "Auditoría activa.",
+          "Goatky listo.",
           "Esperando orden.",
-          "Todo local 👾",
-          "Tamagotchi activo.",
-          "Cabrita feliz 🐐"
+          "Análisis de red activo.",
+          "Cabra-bot vigilando 🐐"
         ];
 
         const skillCount = latestState?.skill_count || 0;
         if (skillCount <= 2) {
           phrases = [
-            "¡Tengo energía! ⚡",
-            "¿Qué hacemos hoy?",
-            "Corriendo procesos...",
-            "¡Cabrita saltarina! 🐐",
-            "Buscando qué aprender..."
+            "¡Sistemas listos! ⚡",
+            "Iniciando escáner local...",
+            "Visor calibrado al 100%.",
+            "¡Goatky activo! 🐐",
+            "Buscando payloads locales..."
           ];
         } else if (skillCount <= 5) {
           phrases = [
-            "Analizando mi entorno...",
-            "Tengo habilidades útiles 🧠",
-            "Hermes me enseña cosas.",
-            "Guardando logs locales.",
-            "Explorando el disco..."
+            "Analizando la subred... 🧠",
+            "Goatky asistiendo en laboratorio.",
+            "Guardando trazas de ejecución.",
+            "Auditando puertos locales...",
+            "Tengo firmas de malware listas."
           ];
         } else {
           phrases = [
-            "Comprendo la red... 🌌",
-            "Meditando en el kernel.",
-            "Conocimiento total activo.",
-            "Fluyendo con los hilos.",
-            "Soy una cabra sabia 🐐✨"
+            "Comprometido con la seguridad... 🌌",
+            "Kernel auditado y bajo control.",
+            "Buscando credenciales en memoria.",
+            "Fluyendo entre sockets.",
+            "Soy Goatky, tu cabra-bot de Red Team 🐐✨"
           ];
         }
         bubble.textContent = phrases[Math.floor(Math.random() * phrases.length)];

@@ -20,11 +20,11 @@ No sustituye a los relevos por dominio.
 - `doc/logs/relevos/backend_modulos/mascota_flotante.md` (Activo)
 - `doc/logs/relevos/backend_modulos/chat_runtime.md` (Previsto)
 
-## Relevos frontend previstos
+## Relevos frontend activos
 
-- `doc/logs/relevos/frontend/mascota_flotante.md`
-- `doc/logs/relevos/frontend/chat.md`
-- `doc/logs/relevos/frontend/ajustes.md`
+- `doc/logs/relevos/frontend/mascota_flotante.md` (Activo)
+- `doc/logs/relevos/frontend/chat.md` (Previsto)
+- `doc/logs/relevos/frontend/ajustes.md` (Previsto)
 
 ## Regla
 

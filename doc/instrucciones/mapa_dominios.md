@@ -30,7 +30,7 @@ Después debe leer:
 - alias: `mascota`, `cabra`, `pet`, `tamagotchi`, `flotante`, `animación`, `animaciones`
 - frontend principal: `doc/logs/relevos/frontend/mascota_flotante.md`
 - logs esperados: `doc/logs/frontend/mascota_flotante.md`
-- archivos probables: `pet.html`, `main.js`, `preload.js`
+- archivos probables: `pet.html`, `main.js`, `preload.js`, `src/pet/petPhysics.js`
 
 ### chat
 
@@ -38,7 +38,7 @@ Después debe leer:
 - frontend principal: `doc/logs/relevos/frontend/chat.md`
 - backend/apoyo: `doc/logs/relevos/backend_modulos/chat_runtime.md`
 - logs esperados: `doc/logs/frontend/chat.md`, `doc/logs/backend_modulos/chat_runtime.md`
-- archivos probables: `chat.html`, `main.js`, `preload.js`
+- archivos probables: `chat.html`, `preload.js`, `src/ipc/ipcHandlers.js`, `src/state/stateService.js`
 
 ### ajustes
 
@@ -46,35 +46,35 @@ Después debe leer:
 - frontend principal: `doc/logs/relevos/frontend/ajustes.md`
 - backend/apoyo: `doc/logs/relevos/backend_modulos/configuracion.md`
 - logs esperados: `doc/logs/frontend/ajustes.md`, `doc/logs/backend_modulos/configuracion.md`
-- archivos probables: `settings.html`, `main.js`, `CONFIG.example.json`
+- archivos probables: `settings.html`, `CONFIG.example.json`, `src/config/configService.js`
 
 ### proveedores IA
 
 - alias: `providers`, `proveedores`, `ollama`, `openai`, `hermes`, `openclaw`, `codex`, `custom api`, `ia`, `llm`
 - backend principal: `doc/logs/relevos/backend_modulos/proveedores_ia.md`
 - logs esperados: `doc/logs/backend_modulos/proveedores_ia.md`
-- archivos probables: `main.js`, futura carpeta `src/providers/`
+- archivos probables: `src/providers/` (providerManager.js, adapters)
 
 ### eventos internos
 
 - alias: `eventos`, `events`, `event bus`, `bus eventos`, `sistema vivo`, `notificaciones`
 - compartido principal: `doc/logs/relevos/compartidos/eventos_internos.md`
 - logs esperados: `doc/logs/backend_modulos/eventos_internos.md`, `doc/logs/frontend/eventos_visuales.md`
-- archivos probables: futura carpeta `src/events/`
+- archivos probables: `src/events/eventBus.js`
 
 ### memoria local
 
 - alias: `memoria`, `memory`, `recuerdos`, `habilidades`, `stats`, `estado local`
 - backend principal: `doc/logs/relevos/backend_modulos/memoria_local.md`
 - logs esperados: `doc/logs/backend_modulos/memoria_local.md`
-- archivos probables: `main.js`, `CONFIG.example.json`, futura carpeta `src/state/`
+- archivos probables: `src/state/stateService.js`
 
 ### seguridad
 
 - alias: `seguridad`, `secrets`, `secretos`, `api key`, `tokens`, `ipc`, `sandbox`, `csp`
 - compartido principal: `doc/logs/relevos/compartidos/seguridad.md`
 - logs esperados: `doc/logs/backend_modulos/seguridad.md`, `doc/logs/frontend/seguridad_ui.md`
-- archivos probables: `main.js`, `preload.js`, `chat.html`, `settings.html`, `pet.html`
+- archivos probables: `preload.js`, `chat.html`, `settings.html`, `pet.html`, `src/config/configService.js`
 
 ### empaquetado y arranque
 

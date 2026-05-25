@@ -10,15 +10,14 @@ Repo activo: `javierberastegui/lokkygoat`
 
 ## Estado funcional conocido
 
-El proyecto contiene una base inicial con:
+El proyecto se encuentra modularizado bajo la siguiente arquitectura estable:
 
-- ventana flotante de mascota;
-- ventana de chat;
-- ventana de ajustes;
-- configuración local;
-- integración multiproveedor inicial desde `main.js`;
-- documentación README inicial;
-- `package.json` y `package-lock.json`.
+- **Estructura Modular (`src/`):** La lógica de configuración, estado, eventos, proveedores de IA, física de mascota y manejadores de IPC está desacoplada de `main.js`.
+- **Física de Mascota Aislada:** Encapsulada en `src/pet/petPhysics.js` y calculada en tiempo real.
+- **Múltiples Proveedores de IA:** Adaptadores separados para Ollama, OpenAI, Claude y Hermes coordinados por `providerManager.js`.
+- **Bus de Eventos Estructurados:** Implementado en `src/events/eventBus.js` con procesamiento de reglas.
+- **Seguridad en Logs:** Sanitización de `apiKey` activa al cargar/guardar configuración y emitir eventos.
+- **Superficies Visuales:** Ventanas de chat, mascota y ajustes conectadas vía IPC.
 
 ## Decisión importante
 
@@ -47,10 +46,8 @@ Lokkygoat debe crecer como:
 
 ## Próxima prioridad recomendada
 
-Saneamiento base:
+Saneamiento base y pulido:
 
-1. revisar secretos/logs;
-2. normalizar nombres Lokkygoat;
-3. introducir eventos estructurados mínimos;
-4. separar progresivamente providers;
-5. validar arranque Electron.
+1. normalizar nombres remanentes de Hermes a Lokkygoat;
+2. revisar y restringir canales de `preload.js` (privilegios mínimos);
+3. validar flujo visual completo de chat y configuraciones con el nuevo backend.

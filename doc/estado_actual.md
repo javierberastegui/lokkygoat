@@ -20,6 +20,7 @@ El proyecto se encuentra modularizado bajo la siguiente arquitectura estable:
 - **Bus de Eventos Estructurados:** Implementado en `src/events/eventBus.js` con procesamiento de reglas.
 - **Seguridad en Logs:** Sanitización de `apiKey` activa al cargar/guardar configuración y emitir eventos (incluyendo las nuevas claves estructuradas).
 - **Superficies Visuales:** Ventanas de chat, mascota y ajustes conectadas vía IPC.
+- **Avatar de Mascota Nebular:** La superficie `pet.html` muestra a Goatky como entidad de nebulosa oscura con humo negro, brillos violeta/rosa, retícula orbital, ojos rasgados y sonrisa pícara, manteniendo los contratos visuales usados por eventos y física.
 - **Comando Toggle y Atajo Global:** Script `toggle_lokkygoat.sh` y atajo global F7 configurado en KDE para encender/apagar la aplicación con detección dinámica del entorno gráfico.
 
 ## Decisión importante

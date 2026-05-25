@@ -12,7 +12,7 @@ Para continuidad abierta, usar el relevo del dominio correspondiente.
 ### Etapa
 
 - Fecha: 2026-05-25
-- Objetivo: Rediseñar visualmente la mascota flotante para adoptar la identidad de Goatky, el droid cabra de Red Team.
+- Objetivo: Rediseñar visualmente la mascota flotante para adoptar la identidad de Goatky.
 - Contexto breve: Se reescribió `pet.html` por completo para reemplazar el núcleo abstracto anterior por un diseño de robot blanco en SVG con visor brillante, ojos expresivos cian, cuernos cibernéticos y detalles de terminal, manteniendo compatibilidad total de eventos e IPC.
 
 ### Cambios
@@ -28,7 +28,7 @@ Para continuidad abierta, usar el relevo del dominio correspondiente.
 
 - Reemplazar el SVG antiguo por un diseño modular de robot/cabra con un visor central.
 - Conservar los IDs y clases HTML (`.eyes-open`, `.eyes-closed`, `#mouth-open`, `#mouth-closed`) y la lógica de Javascript para garantizar la compatibilidad con las animaciones de sueño y salto.
-- Adaptar las frases flotantes (chatter) para alinearlas a la temática de Red Team y laboratorios de ciberseguridad autorizados.
+- Adaptar las frases flotantes (chatter) a la identidad del asistente.
 
 ### Validación
 
@@ -45,7 +45,7 @@ Para continuidad abierta, usar el relevo del dominio correspondiente.
 ### Etapa
 
 - Fecha: 2026-05-25
-- Objetivo: Evolucionar visualmente a Goatky a una cabra-bot demoníaca Red Team y enlazar animaciones físicas.
+- Objetivo: Evolucionar visualmente a Goatky a una cabra-bot demoníaca y enlazar animaciones físicas.
 - Contexto breve: Se rediseñó el SVG en `pet.html` para incorporar cuernos cibernéticos curvos y largos, una cola en forma de diablo, visor negro profundo, sonrisa traviesa y patitas móviles. Se vincularon animaciones CSS al estado de física (`behaviorState`) transmitido por IPC.
 
 ### Cambios
@@ -109,3 +109,39 @@ Para continuidad abierta, usar el relevo del dominio correspondiente.
 ### Siguiente paso sugerido
 
 - Implementar aceleración o inercia más detallada cuando Goatky cambie de dirección al caminar.
+
+### Etapa
+
+- Fecha: 2026-05-25
+- Objetivo: Transformar el avatar de Lokkygoat hacia una entidad de nebulosa oscura similar a la referencia visual aportada.
+- Contexto breve: Se sustituyó la silueta de cabra-bot por una masa abstracta de humo/nebulosa negra con brillos violeta/rosa, retícula orbital, ojos rasgados y sonrisa pícara. Se mantiene la identidad oscura sin letras ni forma humanoide definida, conservando los IDs y clases que usa la lógica actual de sueño, respuesta, eventos y física.
+
+### Cambios
+
+- Archivos nuevos: ninguno.
+- Archivos modificados:
+  - `pet.html`
+- Superficies afectadas:
+  - Ventana flotante de la mascota (`petWindow`).
+- Tests/validaciones: revisión estructural del SVG/HTML mediante lectura del archivo actualizado en GitHub. No se ejecutó `npm start` desde este entorno.
+
+### Decisiones
+
+- Mantener los contratos visuales existentes: `#goatky-character`, `.eyes-open`, `.eyes-closed`, `#mouth-open`, `#mouth-closed`, `#left-arm`, `#right-arm`, `#left-leg`, `#right-leg`, `#goat-tail`, `#thruster-flame` y `#pet-shadow`.
+- Reemplazar las piezas robóticas por lóbulos de humo, filtros SVG de blur/glow, órbitas HUD y trazos tipo grieta cósmica.
+- Conservar el sistema de paletas y estados (`idle`, `thinking`, `executing`, `success`, `error`, `sleep`) para que las reacciones sigan saliendo desde la capa existente.
+- Evitar incrustar la imagen de referencia como asset externo para mantener el avatar como SVG propio, ligero y editable.
+
+### Validación
+
+- Cambio empujado a `main` mediante GitHub.
+- Se conservan los selectores requeridos por la lógica JS de `pet.html`.
+- Validación runtime pendiente en Electron local.
+
+### Incidencias detectadas
+
+- Ninguna bloqueante.
+
+### Siguiente paso sugerido
+
+- Arrancar Lokkygoat localmente y validar visualmente que la nebulosa encaja con la ventana flotante y que las animaciones de física no deforman demasiado la sonrisa/ojos.

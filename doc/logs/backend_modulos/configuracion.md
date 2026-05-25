@@ -39,3 +39,35 @@ Para continuidad abierta, usar el relevo del dominio correspondiente.
 ### Siguiente paso sugerido
 
 - Añadir validaciones de formato en el guardado de configuración para evitar archivos JSON corruptos.
+
+### Etapa
+
+- Fecha: 2026-05-25
+- Objetivo: corregir ruta de `preload.js` tras modularización.
+- Contexto breve: al mover la creación de ventanas a `src/windows/windowManager.js`, la ruta `path.join(__dirname, "..", "preload.js")` pasó a resolver erróneamente `src/preload.js` en vez del `preload.js` raíz.
+
+### Cambios
+
+- Archivos nuevos: ninguno.
+- Archivos modificados:
+  - `src/windows/windowManager.js`
+  - `doc/logs/backend_modulos/configuracion.md`
+- Dependencias: ninguna.
+- Tests/validaciones: pendiente arranque manual.
+
+### Decisiones
+
+- Mantener `preload.js` en raíz por ahora.
+- Corregir la ruta desde `src/windows/` usando `path.join(__dirname, "..", "..", "preload.js")`.
+
+### Validación
+
+- Pendiente `node --check` y `npm start`.
+
+### Incidencias detectadas
+
+- La ruta incorrecta del preload podía dejar `window.electronAPI` sin exponer y provocar que la mascota no respondiera al click.
+
+### Siguiente paso sugerido
+
+- Validar clic en mascota, chat y ajustes en modo normal.

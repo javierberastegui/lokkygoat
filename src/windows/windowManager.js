@@ -57,7 +57,7 @@ function createPetWindow(onFinishedLoad) {
       hasShadow: false,
       show: false,
       webPreferences: {
-        preload: path.join(__dirname, "..", "preload.js"),
+        preload: path.join(__dirname, "..", "..", "preload.js"),
         contextIsolation: true,
         nodeIntegration: false,
         sandbox: false,
@@ -120,7 +120,7 @@ function createChatWindow() {
     hasShadow: false,
     show: false,
     webPreferences: {
-      preload: path.join(__dirname, "..", "preload.js"),
+      preload: path.join(__dirname, "..", "..", "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
@@ -169,7 +169,7 @@ function createSettingsWindow() {
     hasShadow: true,
     show: false,
     webPreferences: {
-      preload: path.join(__dirname, "..", "preload.js"),
+      preload: path.join(__dirname, "..", "..", "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,

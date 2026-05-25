@@ -37,41 +37,44 @@ class PetPhysics {
       if (this.behaviorTicks <= 0) {
         const rand = Math.random();
         
-        // Behaviors: grounded_walk (40%), idle_grounded (30%), hop (15%), fly (10%), warp (5%)
-        if (rand < 0.40) {
-          this.behaviorState = "grounded_walk";
-          this.behaviorTicks = Math.floor(Math.random() * 200) + 150; 
-          const speedScale = skillCount <= 2 ? 0.95 : (skillCount <= 5 ? 1.3 : 1.7);
-          this.speedBase = (0.05 + Math.random() * 0.05) * speedScale;
-          this.targetVx = (Math.random() > 0.5 ? 1 : -1) * this.speedBase;
-          this.targetVy = 0;
-        } else if (rand < 0.70) {
+        // Behaviors: idle_grounded (20%), grounded_walk (55%), hop (15%), fly (9%), warp (1% max)
+        if (rand < 0.20) {
           this.behaviorState = "idle_grounded";
-          this.behaviorTicks = Math.floor(Math.random() * 300) + 200; 
+          this.behaviorTicks = Math.floor(Math.random() * 200) + 120; 
           this.targetVx = 0;
           this.targetVy = 0;
           this.speedBase = 0;
-        } else if (rand < 0.85) {
-          this.behaviorState = "hop";
-          this.behaviorTicks = Math.floor(Math.random() * 60) + 40; 
-          const speedScale = skillCount <= 2 ? 1.0 : (skillCount <= 5 ? 1.3 : 1.6);
-          this.speedBase = (0.06 + Math.random() * 0.06) * speedScale;
+        } else if (rand < 0.75) {
+          this.behaviorState = "grounded_walk";
+          this.behaviorTicks = Math.floor(Math.random() * 180) + 120; 
+          const speedScale = skillCount <= 2 ? 0.95 : (skillCount <= 5 ? 1.3 : 1.7);
+          this.speedBase = (0.8 + Math.random() * 1.4) * speedScale;
           this.targetVx = (Math.random() > 0.5 ? 1 : -1) * this.speedBase;
-          this.yVelocity = -4.5 - Math.random() * 2.0; 
-        } else if (rand < 0.95) {
+          this.targetVy = 0;
+        } else if (rand < 0.90) {
+          this.behaviorState = "hop";
+          this.behaviorTicks = Math.floor(Math.random() * 50) + 30; 
+          const speedScale = skillCount <= 2 ? 1.0 : (skillCount <= 5 ? 1.3 : 1.6);
+          this.speedBase = (1.0 + Math.random() * 1.0) * speedScale;
+          this.targetVx = (Math.random() > 0.5 ? 1 : -1) * this.speedBase;
+          this.yVelocity = -4.0 - Math.random() * 2.0; 
+        } else if (rand < 0.99) {
           this.behaviorState = "fly";
-          this.behaviorTicks = Math.floor(Math.random() * 250) + 150; 
+          this.behaviorTicks = Math.floor(Math.random() * 150) + 100; 
           const speedScale = skillCount <= 2 ? 0.8 : (skillCount <= 5 ? 1.1 : 1.4);
-          this.speedBase = (0.08 + Math.random() * 0.06) * speedScale;
+          this.speedBase = (1.2 + Math.random() * 1.0) * speedScale;
           this.wanderAngle = Math.random() * Math.PI * 2;
         } else {
-          if (Date.now() - this.lastWarpTime > 15000) {
+          // warp: 1% max, minimum 60s cooldown
+          if (Date.now() - this.lastWarpTime > 60000) {
             this.behaviorState = "warp";
             this.lastWarpTime = Date.now();
           } else {
+            // Fallback to grounded_walk
             this.behaviorState = "grounded_walk";
             this.behaviorTicks = 120;
-            this.speedBase = 0.05;
+            const speedScale = skillCount <= 2 ? 0.95 : (skillCount <= 5 ? 1.3 : 1.7);
+            this.speedBase = (0.8 + Math.random() * 1.4) * speedScale;
             this.targetVx = (Math.random() > 0.5 ? 1 : -1) * this.speedBase;
             this.targetVy = 0;
           }
@@ -90,7 +93,7 @@ class PetPhysics {
         } else {
           this.behaviorState = "grounded_walk";
           this.behaviorTicks = 150;
-          this.speedBase = 0.04;
+          this.speedBase = 0.5; // Walk is visible even in quiet mode
           this.targetVx = (Math.random() > 0.5 ? 1 : -1) * this.speedBase;
           this.targetVy = 0;
         }
@@ -222,10 +225,11 @@ class PetPhysics {
   finishWarp(bounds, screenArea) {
     const a = screenArea;
     const b = bounds;
+    const groundY = a.y + a.height - b.height;
     
-    // Warping can place Goatky in the air, allowing a dramatic landing!
+    // Teleport and spawn near the ground (within the bottom 25% of the screen height)
     const nx = a.x + Math.random() * (a.width - b.width);
-    const ny = a.y + Math.random() * (a.height - b.height) * 0.6; // warp within upper 60%
+    const ny = groundY - Math.random() * (a.height * 0.25);
     
     const clamp = (x, y, w, h) => {
       return {

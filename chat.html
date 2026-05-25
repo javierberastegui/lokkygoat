@@ -104,7 +104,6 @@
 
     .sb-stats {
       margin-top: 24px;
-      flex: 1;
     }
 
     .sb-section-title {
@@ -137,12 +136,39 @@
       text-transform: capitalize;
     }
 
+    .btn-settings-sidebar {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.7), rgba(34, 211, 238, 0.7));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      color: #ffffff;
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      width: 100%;
+      text-align: center;
+      margin-top: 12px;
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+    }
+    
+    .btn-settings-sidebar:hover {
+      background: linear-gradient(135deg, rgb(124, 58, 237), rgb(34, 211, 238));
+      box-shadow: 0 6px 16px rgba(34, 211, 238, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    .btn-settings-sidebar:active {
+      transform: translateY(1px);
+    }
+
     .sb-footer {
       font-size: 11px;
       color: #6b7280;
       text-align: center;
       padding-top: 15px;
       border-top: 1px solid rgba(255, 255, 255, 0.06);
+      margin-top: auto;
     }
 
     /* Chat Viewport Styles */
@@ -396,6 +422,25 @@
           </div>
         </div>
 
+        <div class="sb-stats" style="margin-top: 15px;">
+          <h3 class="sb-section-title">Conexión IA</h3>
+          <div class="sb-stat-row">
+            <span class="sb-stat-label">Proveedor</span>
+            <select id="sb-provider-select" style="background: rgba(2, 6, 23, .55); border: 1px solid rgba(148, 163, 184, .2); color: #f8fafc; padding: 2px 6px; border-radius: 6px; font-size: 11px; outline: none; width: 130px; cursor: pointer;">
+              <option value="ollama">Ollama</option>
+              <option value="openai">OpenAI</option>
+              <option value="claude">Claude</option>
+              <option value="hermes">Hermes</option>
+              <option value="openclaw">OpenClaw</option>
+              <option value="codex">Codex</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <button id="sb-btn-settings" class="btn-settings-sidebar">
+            Configurar Conexión
+          </button>
+        </div>
+
         <div class="sb-footer">
           Lokkygoat v2.0
         </div>
@@ -409,6 +454,7 @@
             <div class="ch-status" id="chat-provider-name">Cargando proveedor...</div>
           </div>
           <div class="ch-actions">
+            <button id="open-settings" class="btn-action">ajustes</button>
             <button id="minimize" class="btn-action">minimizar</button>
             <button id="close" class="btn-action btn-close">cerrar</button>
           </div>
@@ -433,6 +479,11 @@
     const closeBtn = document.getElementById("close");
     const minimizeBtn = document.getElementById("minimize");
     const backdrop = document.getElementById("backdrop");
+    const openSettingsBtn = document.getElementById("open-settings");
+    const sbBtnSettings = document.getElementById("sb-btn-settings");
+    const sbProviderSelect = document.getElementById("sb-provider-select");
+
+    let isUpdatingProviderSelect = false;
 
     async function init() {
       await loadSidebarStats();
@@ -451,6 +502,74 @@
     backdrop.addEventListener("click", (e) => {
       if (e.target === backdrop) {
         window.electronAPI?.hideChat?.();
+      }
+    });
+
+    openSettingsBtn.addEventListener("click", () => {
+      window.electronAPI?.openSettings?.();
+    });
+
+    sbBtnSettings.addEventListener("click", () => {
+      window.electronAPI?.openSettings?.();
+    });
+
+    sbProviderSelect.addEventListener("change", async (e) => {
+      if (isUpdatingProviderSelect) return;
+      const newProv = e.target.value;
+      
+      try {
+        if (!window.electronAPI || !window.electronAPI.getCompanionState || !window.electronAPI.saveCompanionConfig) return;
+        
+        const data = await window.electronAPI.getCompanionState();
+        const conf = data.config || {};
+        
+        conf.provider = newProv;
+        
+        // Adjust default URLs and models if they are empty or inconsistent
+        if (newProv === "ollama") {
+          if (!conf.apiUrl || conf.apiUrl.includes("9119") || conf.apiUrl.includes("openai") || conf.apiUrl.includes("anthropic")) {
+            conf.apiUrl = "http://127.0.0.1:11434";
+          }
+          if (!conf.model || conf.model.startsWith("gpt-") || conf.model.startsWith("claude-")) {
+            conf.model = "llama3";
+          }
+        } else if (newProv === "hermes") {
+          if (!conf.apiUrl || conf.apiUrl.includes("11434") || conf.apiUrl.includes("openai") || conf.apiUrl.includes("anthropic")) {
+            conf.apiUrl = "http://127.0.0.1:9119";
+          }
+        } else if (newProv === "openai") {
+          if (!conf.model || conf.model === "llama3" || conf.model.startsWith("claude-")) {
+            conf.model = "gpt-4o-mini";
+          }
+        } else if (newProv === "claude") {
+          if (!conf.model || conf.model === "llama3" || conf.model.startsWith("gpt-")) {
+            conf.model = "claude-3-5-sonnet-latest";
+          }
+        }
+
+        await window.electronAPI.saveCompanionConfig(conf);
+        await loadSidebarStats();
+        
+        const providerNames = {
+          ollama: "Ollama (Local)",
+          openai: "OpenAI ChatGPT",
+          claude: "Anthropic Claude",
+          hermes: "Hermes Core",
+          openclaw: "OpenClaw Proxy",
+          codex: "Codex Engine",
+          custom: "Custom API"
+        };
+        addMessage("system", `Proveedor cambiado a: ${providerNames[newProv] || newProv}`);
+
+        const needsKey = ["openai", "claude", "openclaw", "codex", "custom"].includes(newProv);
+        const hasKey = conf.apiKey && conf.apiKey.trim().length > 0;
+        
+        if (needsKey && !hasKey) {
+          window.electronAPI.openSettings();
+          addMessage("system", `Introduce tu API Key en la ventana de ajustes.`);
+        }
+      } catch (err) {
+        console.error("Error al cambiar de proveedor:", err);
       }
     });
 
@@ -483,6 +602,12 @@
         const activeProv = conf.provider || "ollama";
         document.getElementById("chat-provider-name").textContent = providerNames[activeProv] || activeProv;
         document.getElementById("sb-subtitle").textContent = "Mascota AI (" + (providerNames[activeProv] || activeProv) + ")";
+
+        if (sbProviderSelect && sbProviderSelect.value !== activeProv) {
+          isUpdatingProviderSelect = true;
+          sbProviderSelect.value = activeProv;
+          isUpdatingProviderSelect = false;
+        }
       } catch (_) {}
     }
 
@@ -555,6 +680,32 @@
       return el;
     }
 
+    function addSettingsConfigSuggest(element) {
+      const suggestDiv = document.createElement("div");
+      suggestDiv.style.marginTop = "12px";
+      suggestDiv.style.padding = "12px";
+      suggestDiv.style.borderRadius = "12px";
+      suggestDiv.style.background = "rgba(244, 63, 94, 0.1)";
+      suggestDiv.style.border = "1px solid rgba(244, 63, 94, 0.3)";
+      suggestDiv.style.fontSize = "13px";
+      suggestDiv.style.display = "flex";
+      suggestDiv.style.flexDirection = "column";
+      suggestDiv.style.gap = "8px";
+      suggestDiv.innerHTML = `
+        <div style="color: #fecdd3; font-weight: 700;">⚠️ Error de Conexión Detectado</div>
+        <div style="color: #cbd5e1; font-size: 12px; line-height: 1.4;">¿No tienes el modelo descargado o la URL/API Key es incorrecta? Puedes cambiar de proveedor o ajustar los parámetros.</div>
+        <button id="btn-err-settings" class="btn-action" style="align-self: flex-start; background: rgba(244, 63, 94, 0.2); border-color: rgba(244, 63, 94, 0.4); color: #fecdd3; font-size: 11px;">Configurar Conexión</button>
+      `;
+      element.appendChild(suggestDiv);
+      suggestDiv.querySelector("#btn-err-settings").addEventListener("click", () => {
+        window.electronAPI?.openSettings?.();
+      });
+      
+      setTimeout(() => {
+        messages.scrollTop = messages.scrollHeight;
+      }, 50);
+    }
+
     async function sendMessage() {
       const text = input.value.trim();
       if (!text || send.disabled) return;
@@ -575,8 +726,12 @@
         }
         const reply = await window.electronAPI.sendChatMessage(text);
         thinking.innerHTML = renderMarkdownLite(String(reply));
+        if (String(reply).startsWith("Error:")) {
+          addSettingsConfigSuggest(thinking);
+        }
       } catch (e) {
         thinking.innerHTML = "No pude conectar con el proveedor: " + e.message;
+        addSettingsConfigSuggest(thinking);
       } finally {
         send.disabled = false;
         

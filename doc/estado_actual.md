@@ -50,4 +50,4 @@ Saneamiento base y pulido:
 
 1. normalizar nombres remanentes de Hermes a Lokkygoat;
 2. revisar y restringir canales de `preload.js` (privilegios mínimos);
-3. validar flujo visual completo de chat y configuraciones con el nuevo backend.
+3. añadir comprobación dinámica de salud (ping) en background para los proveedores seleccionados.

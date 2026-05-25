@@ -9,23 +9,28 @@ Para historial de etapas, usar el log del dominio.
 
 ## Estado actual
 
-- La interfaz visual de la mascota ha evolucionado a una cabra-bot demoníaca Red Team en `pet.html`.
-- Se anima dinámicamente según el estado de la física (grounded_walk, fly, hop, idle_grounded).
+- La interfaz visual de la mascota Goatky es un cyber-goat bot demoníaco asentado en el suelo con gravedad y peso.
+- Camina a velocidad visible (0.8-2.2 px por tick), salta y vuela en periodos cortos, regresando al suelo de forma natural.
+- El warp se ha reducido enormemente para mantener la fidelidad de una mascota física y viva.
 
 ## Qué quedó ya hecho
 
-- Diseño de cuernos más marcados y curvos, visor negro oscuro, cola de diablo tipo cable y patitas de cascos visibles.
-- Mapeo de `behaviorState` a clases de CSS (`physics-grounded_walk`, `physics-hop`, `physics-fly`, `physics-idle_grounded`).
-- Animaciones de piernas oscilantes para caminar en tierra, compresión/estiramiento para saltos, parpadeo de thruster para vuelo y respiración quieta en reposo.
-- Transiciones suaves de color de ojos y aura (violeta y roja por defecto).
+- Eliminación del aspecto Pikachu (antenas reducidas a pequeños puertos laterales).
+- Cuernos curvos y oscuros con silueta de cabra.
+- Silueta de cabeza octogonal/cyber y visor hexagonal agresivo con ojos rasgados de LED.
+- Cascos robóticos claros y definidos.
+- Sombra en el suelo (`#pet-shadow`) dinámica controlada por CSS según el estado de la física.
+- Eliminación de la flotación por defecto del contenedor para permitir un caminar realista.
+- Velocidades de caminata perceptibles (entre 0.8 y 2.2 px por tick).
+- Probabilidades de comportamiento y cooldown para warp (1% probabilidad, min 60s cooldown).
 
 ## Qué no quedó hecho
 
-- El badge de estado (`status-badge`) sigue flotando externamente en la esquina de la ventana; se mantiene como deuda estética integrarlo en el visor.
+- El badge de estado (`status-badge`) sigue flotando externamente en la esquina superior; se mantiene como deuda integrarlo en el visor.
 
 ## Riesgos o trampas conocidas
 
-- Modificar la escala del SVG o del grupo principal `#goatky-character` puede alterar la rotación y distorsión de paso calculada en JavaScript, provocando animaciones desfasadas.
+- Si se altera la posición de la sombra en el SVG (`#pet-shadow`), debe cuidarse la sincronización con el punto de contacto de los cascos al final del recorrido vertical.
 
 ## Archivos clave a leer
 
@@ -34,8 +39,8 @@ Para historial de etapas, usar el log del dominio.
 
 ## Validaciones pendientes
 
-- Validar la consistencia de las animaciones en sistemas con bajas tasas de refresco (bajos FPS).
+- Verificar comportamiento de caída en resoluciones de pantalla extremadamente pequeñas.
 
 ## Siguiente micro-paso recomendado
 
-- Agregar un efecto de glitch sutil al visor de Goatky cuando pase a estado `thinking` o `executing`.
+- Agregar un sutil efecto de rebote elástico en el cuerpo completo de Goatky cuando aterriza después de un vuelo o un salto.

@@ -96,20 +96,20 @@
     }
 
     #pet {
-      width: calc(178px * var(--pet-scale, 1));
-      height: calc(178px * var(--pet-scale, 1));
-      margin-top: 34px;
+      width: calc(192px * var(--pet-scale, 1));
+      height: calc(192px * var(--pet-scale, 1));
+      margin-top: 30px;
       cursor: pointer;
       -webkit-app-region: no-drag;
       z-index: 3;
       pointer-events: auto;
-      transform-origin: 50% 74%;
+      transform-origin: 50% 58%;
       transition: filter 0.25s ease, transform 0.08s linear;
-      filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.95)) drop-shadow(0 0 28px rgba(126, 34, 206, 0.62));
+      filter: drop-shadow(0 0 14px rgba(236, 72, 153, 0.92)) drop-shadow(0 0 38px rgba(126, 34, 206, 0.78));
     }
 
     #pet:hover {
-      filter: drop-shadow(0 0 16px rgba(236, 72, 153, 1)) drop-shadow(0 0 42px rgba(168, 85, 247, 0.86));
+      filter: drop-shadow(0 0 20px rgba(255, 31, 143, 1)) drop-shadow(0 0 54px rgba(168, 85, 247, 0.95));
     }
 
     svg { width: 100%; height: 100%; overflow: visible; }
@@ -120,79 +120,86 @@
       filter: drop-shadow(0 0 8px currentColor);
     }
 
-    .hud-ring-outer { stroke: var(--ring3-color); stroke-width: 2; stroke-dasharray: 10 18; opacity: .78; animation: spin 18s linear infinite; }
-    .hud-ring-mid { stroke: var(--ring2-color); stroke-width: 3.5; stroke-dasharray: 34 22; opacity: .72; animation: spinReverse 15s linear infinite; }
-    .hud-ring-inner { stroke: var(--ring1-color); stroke-width: 2; stroke-dasharray: 20 15; opacity: .56; animation: spin 10s linear infinite; }
+    .hud-ring-outer { stroke: var(--ring3-color); stroke-width: 1.2; stroke-dasharray: 1 24 7 16; opacity: .44; animation: spin 28s linear infinite; }
+    .hud-ring-mid { stroke: var(--ring2-color); stroke-width: 2.2; stroke-dasharray: 42 28; opacity: .5; animation: spinReverse 21s linear infinite; }
+    .hud-ring-inner { stroke: var(--ring1-color); stroke-width: 1.4; stroke-dasharray: 18 18; opacity: .42; animation: spin 14s linear infinite; }
+
+    .reticle-line {
+      stroke: rgba(236, 72, 153, .22);
+      stroke-width: 1;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 6px rgba(236, 72, 153, .45));
+    }
 
     .spark {
       fill: var(--ring3-color);
       opacity: .7;
-      filter: drop-shadow(0 0 8px var(--ring3-color));
+      filter: drop-shadow(0 0 9px var(--ring3-color));
       animation: sparkBlink 2.6s ease-in-out infinite;
     }
 
-    .plate {
-      fill: url(#plateGradient);
-      stroke: var(--plate-edge);
-      stroke-width: 2.5;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.28));
+    .void-orb {
+      fill: url(#voidOrbGradient);
+      stroke: rgba(236, 72, 153, .26);
+      stroke-width: 1.4;
+      filter: url(#nebulaGlow);
+      opacity: .82;
     }
 
-    .dark-plate {
-      fill: #080714;
-      stroke: #2e1748;
-      stroke-width: 2;
-      stroke-linejoin: round;
+    .void-orb.deep {
+      stroke: rgba(168, 85, 247, .26);
+      opacity: .68;
+    }
+
+    .smoke-lobe {
+      fill: url(#nebulaGradient);
+      filter: url(#smokeBlur);
+      opacity: .76;
+      mix-blend-mode: screen;
+    }
+
+    .smoke-lobe.shadow {
+      fill: url(#blackMistGradient);
+      filter: url(#voidBlur);
+      opacity: .92;
+      mix-blend-mode: normal;
+    }
+
+    .rift {
+      fill: none;
+      stroke: url(#riftGradient);
+      stroke-width: 10;
+      stroke-linecap: round;
+      filter: url(#smokeBlur);
+      opacity: .7;
     }
 
     .neon-line {
       fill: none;
       stroke: var(--ring3-color);
-      stroke-width: 2;
+      stroke-width: 1.7;
       stroke-linecap: round;
-      filter: drop-shadow(0 0 6px var(--ring3-color));
-    }
-
-    .horn-main {
-      fill: url(#hornGradient);
-      stroke: #2f1644;
-      stroke-width: 2.5;
       stroke-linejoin: round;
-      filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.65));
-    }
-
-    .horn-edge {
-      fill: none;
-      stroke: var(--ring3-color);
-      stroke-width: 2;
-      stroke-linecap: round;
       filter: drop-shadow(0 0 7px var(--ring3-color));
     }
 
-    .visor-shell {
-      fill: #03030a;
-      stroke: #402060;
-      stroke-width: 3.5;
-      filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.7)) drop-shadow(0 0 18px rgba(126, 34, 206, 0.42));
+    .face-void {
+      fill: url(#faceVoidGradient);
+      filter: url(#voidBlur);
+      opacity: .98;
     }
 
-    .visor-glass {
-      fill: rgba(0, 0, 0, 0.92);
-      stroke: rgba(236, 72, 153, 0.5);
-      stroke-width: 1.4;
-    }
-
-    .visor-reflection {
-      fill: none;
-      stroke: rgba(255, 255, 255, 0.12);
-      stroke-width: 1.2;
-      stroke-linecap: round;
+    .core {
+      fill: var(--core-fill);
+      stroke: var(--core-stroke);
+      stroke-width: 2;
+      filter: drop-shadow(0 0 10px var(--core-stroke));
+      animation: corePulse 2.6s ease-in-out infinite;
     }
 
     .eyes-open {
-      filter: drop-shadow(0 0 7px var(--ring3-color));
-      transform-origin: 110px 103px;
+      filter: drop-shadow(0 0 9px var(--ring3-color)) drop-shadow(0 0 16px rgba(236, 72, 153, .78));
+      transform-origin: 110px 101px;
       animation: blinkEyes 4.6s ease-in-out infinite;
     }
 
@@ -203,7 +210,7 @@
       stroke-width: 3;
       stroke-linecap: round;
       fill: none;
-      filter: drop-shadow(0 0 7px var(--ring3-color));
+      filter: drop-shadow(0 0 9px var(--ring3-color));
     }
 
     #mouth-open, #mouth-closed {
@@ -211,91 +218,64 @@
       stroke: var(--ring3-color);
       stroke-linecap: round;
       stroke-linejoin: round;
-      filter: drop-shadow(0 0 6px var(--ring3-color));
+      filter: drop-shadow(0 0 9px var(--ring3-color)) drop-shadow(0 0 18px rgba(236, 72, 153, .62));
     }
 
-    #mouth-open { stroke-width: 3; }
-    #mouth-closed { stroke-width: 2.6; }
+    #mouth-open { stroke-width: 2.8; }
+    #mouth-closed { stroke-width: 2.4; }
 
-    .core {
-      fill: var(--core-fill);
-      stroke: var(--core-stroke);
-      stroke-width: 2.5;
-      filter: drop-shadow(0 0 9px var(--core-stroke));
-      animation: corePulse 2.6s ease-in-out infinite;
-    }
-
-    .goat-emblem {
+    .mist-tendril {
       fill: none;
-      stroke: var(--ring3-color);
-      stroke-width: 2;
+      stroke: url(#mistStrokeGradient);
+      stroke-width: 10;
       stroke-linecap: round;
-      stroke-linejoin: round;
+      filter: url(#smokeBlur);
+      opacity: .62;
+    }
+
+    .mist-tendril.edge {
+      stroke: var(--ring3-color);
+      stroke-width: 1.4;
       filter: drop-shadow(0 0 6px var(--ring3-color));
-    }
-
-    .joint {
-      fill: #130b21;
-      stroke: #4b2368;
-      stroke-width: 1.8;
-    }
-
-    .claw, .hoof {
-      fill: #05040b;
-      stroke: var(--ring3-color);
-      stroke-width: 1.7;
-      filter: drop-shadow(0 0 5px var(--ring3-color));
-    }
-
-    .tail-line {
-      fill: none;
-      stroke: #1d102d;
-      stroke-width: 3.2;
-      stroke-linecap: round;
-      filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.42));
-    }
-
-    .tail-tip {
-      fill: var(--ring3-color);
-      filter: drop-shadow(0 0 9px var(--ring3-color));
+      opacity: .54;
     }
 
     #pet-shadow {
-      fill: rgba(236, 72, 153, 0.22);
-      filter: blur(2px) drop-shadow(0 0 10px rgba(236, 72, 153, 0.35));
+      fill: rgba(236, 72, 153, 0.18);
+      filter: blur(3px) drop-shadow(0 0 16px rgba(236, 72, 153, 0.42));
       transform-origin: 110px 184px;
       transition: opacity .16s ease, transform .16s ease;
     }
 
-    #goatky-character { transform-origin: 110px 118px; }
+    #goatky-character { transform-origin: 110px 111px; }
     #left-leg, #right-leg, #left-arm, #right-arm { transform-box: fill-box; }
-    #left-leg { transform-origin: 50% 12%; }
-    #right-leg { transform-origin: 50% 12%; }
-    #left-arm { transform-origin: 80% 10%; }
-    #right-arm { transform-origin: 20% 10%; }
-    #goat-tail { transform-origin: 90px 148px; }
+    #left-leg { transform-origin: 60% 12%; }
+    #right-leg { transform-origin: 40% 12%; }
+    #left-arm { transform-origin: 83% 45%; }
+    #right-arm { transform-origin: 17% 45%; }
+    #goat-tail { transform-origin: 95px 145px; }
 
     #thruster-flame {
       opacity: 0;
-      transform-origin: 110px 168px;
+      transform-origin: 110px 166px;
       fill: url(#flameGradient);
-      filter: drop-shadow(0 0 10px var(--ring3-color));
+      filter: drop-shadow(0 0 14px var(--ring3-color)) url(#smokeBlur);
       transition: opacity .16s ease;
     }
 
-    #pet.physics-idle_grounded #goatky-character { animation: groundedBreath 3.3s ease-in-out infinite; }
-    #pet.physics-grounded_walk #goatky-character { animation: walkBody 0.44s ease-in-out infinite alternate; }
-    #pet.physics-grounded_walk #left-leg { animation: leftWalk 0.36s ease-in-out infinite alternate; }
-    #pet.physics-grounded_walk #right-leg { animation: rightWalk 0.36s ease-in-out infinite alternate; }
-    #pet.physics-grounded_walk #left-arm { animation: rightWalk 0.44s ease-in-out infinite alternate; }
-    #pet.physics-grounded_walk #right-arm { animation: leftWalk 0.44s ease-in-out infinite alternate; }
+    #pet.physics-idle_grounded #goatky-character { animation: groundedBreath 3.5s ease-in-out infinite; }
+    #pet.physics-grounded_walk #goatky-character { animation: walkBody 0.5s ease-in-out infinite alternate; }
+    #pet.physics-grounded_walk #left-leg { animation: leftWalk 0.44s ease-in-out infinite alternate; }
+    #pet.physics-grounded_walk #right-leg { animation: rightWalk 0.44s ease-in-out infinite alternate; }
+    #pet.physics-grounded_walk #left-arm { animation: rightWalk 0.58s ease-in-out infinite alternate; }
+    #pet.physics-grounded_walk #right-arm { animation: leftWalk 0.58s ease-in-out infinite alternate; }
     #pet.physics-hop #goatky-character { animation: hopSquash .46s ease-in-out infinite alternate; }
-    #pet.physics-hop #pet-shadow { opacity: .14; transform: scaleX(.78); }
+    #pet.physics-hop #pet-shadow { opacity: .12; transform: scaleX(.74); }
     #pet.physics-fly #goatky-character, #pet.physics-dash #goatky-character { animation: hoverGoat 1.05s ease-in-out infinite alternate; }
-    #pet.physics-fly #thruster-flame, #pet.physics-dash #thruster-flame { opacity: 1; animation: thrusterFlicker .09s ease-in-out infinite alternate; }
-    #pet.physics-fly #pet-shadow, #pet.physics-dash #pet-shadow { opacity: .08; transform: scaleX(.55); }
+    #pet.physics-fly #thruster-flame, #pet.physics-dash #thruster-flame { opacity: .78; animation: thrusterFlicker .12s ease-in-out infinite alternate; }
+    #pet.physics-fly #pet-shadow, #pet.physics-dash #pet-shadow { opacity: .06; transform: scaleX(.5); }
     #pet.physics-fly #goat-tail, #pet.physics-dash #goat-tail { animation: tailWhip .9s ease-in-out infinite alternate; }
-    #pet.dashing { filter: brightness(1.18) drop-shadow(0 0 20px var(--ring3-color)) drop-shadow(0 0 38px rgba(168, 85, 247, .68)) !important; }
+    #pet.dashing { filter: brightness(1.22) drop-shadow(0 0 24px var(--ring3-color)) drop-shadow(0 0 46px rgba(168, 85, 247, .76)) !important; }
     #pet.bounce, #pet.celebrate { animation: spinOnce .9s ease-in-out 1; }
     #pet.glow-bright .core { animation: coreFlash 1.05s ease-in-out infinite; }
     #pet.portal-entering { animation: portalIn .48s cubic-bezier(.55,.055,.675,.19) 1 forwards; }
@@ -303,32 +283,33 @@
     #pet.scene-thinking #goatky-character, #pet.scene-executing #goatky-character { animation: cyberGlitch 2.4s steps(1) infinite; }
     #pet.scene-thinking .eye-shape, #pet.scene-error .eye-shape { fill: #ff1f8f; }
     #pet.scene-success .eye-shape { fill: #34d399; }
-    #pet.scene-executing .hud-ring-mid, #pet.scene-executing .hud-ring-outer, #pet.scene-executing .hud-ring-inner { opacity: 1; stroke-width: 4; animation-duration: 1.1s; }
+    #pet.scene-executing .hud-ring-mid, #pet.scene-executing .hud-ring-outer, #pet.scene-executing .hud-ring-inner { opacity: .9; stroke-width: 3; animation-duration: 1.1s; }
     #pet.scene-error { animation: alertShake .55s ease-in-out 1; }
 
     #mood {
       position: absolute;
       left: 50%;
-      bottom: 6px;
+      bottom: 4px;
       transform: translateX(-50%);
-      color: #ff2e96;
-      font-size: 11px;
+      color: rgba(255, 46, 150, .82);
+      font-size: 10px;
       font-weight: 900;
       letter-spacing: 3.2px;
       text-shadow: 0 0 7px rgba(236, 72, 153, .96), 0 0 18px rgba(126, 34, 206, .76);
       pointer-events: none;
       z-index: 6;
+      opacity: .78;
     }
 
     #mood::before, #mood::after {
       content: "";
       display: inline-block;
-      width: 22px;
+      width: 20px;
       height: 1px;
       background: #ec4899;
       margin: 0 7px 3px;
       box-shadow: 0 0 8px #ec4899;
-      opacity: .62;
+      opacity: .48;
     }
 
     #close-pet, #settings-pet {
@@ -385,18 +366,18 @@
 
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     @keyframes spinReverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-    @keyframes sparkBlink { 0%,100% { opacity:.22; transform: scale(.8); } 50% { opacity:1; transform: scale(1.2); } }
-    @keyframes corePulse { 0%,100% { filter: drop-shadow(0 0 7px var(--core-stroke)); } 50% { filter: drop-shadow(0 0 20px var(--ring3-color)); } }
-    @keyframes coreFlash { 0%,100% { filter: drop-shadow(0 0 10px #ec4899); } 50% { filter: drop-shadow(0 0 28px #ff1f8f); } }
-    @keyframes blinkEyes { 0%,90%,100% { transform: scaleY(1); } 94% { transform: scaleY(.18); } }
-    @keyframes groundedBreath { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(1px) scale(1.015,.985); } }
-    @keyframes walkBody { 0% { transform: translateY(0) rotate(-1.5deg); } 100% { transform: translateY(-2px) rotate(1.5deg); } }
-    @keyframes leftWalk { from { transform: rotate(-18deg) translateY(1px); } to { transform: rotate(20deg) translateY(-1px); } }
-    @keyframes rightWalk { from { transform: rotate(20deg) translateY(-1px); } to { transform: rotate(-18deg) translateY(1px); } }
-    @keyframes hopSquash { 0% { transform: scale(1.08,.86) translateY(2px); } 100% { transform: scale(.94,1.18) translateY(-5px); } }
+    @keyframes sparkBlink { 0%,100% { opacity:.18; transform: scale(.78); } 50% { opacity:1; transform: scale(1.24); } }
+    @keyframes corePulse { 0%,100% { filter: drop-shadow(0 0 7px var(--core-stroke)); opacity: .64; } 50% { filter: drop-shadow(0 0 24px var(--ring3-color)); opacity: 1; } }
+    @keyframes coreFlash { 0%,100% { filter: drop-shadow(0 0 12px #ec4899); } 50% { filter: drop-shadow(0 0 34px #ff1f8f); } }
+    @keyframes blinkEyes { 0%,90%,100% { transform: scaleY(1); } 94% { transform: scaleY(.16); } }
+    @keyframes groundedBreath { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(1px) scale(1.025,.985); } }
+    @keyframes walkBody { 0% { transform: translateY(0) rotate(-1.4deg); } 100% { transform: translateY(-2px) rotate(1.4deg); } }
+    @keyframes leftWalk { from { transform: rotate(-10deg) translateY(1px); } to { transform: rotate(12deg) translateY(-1px); } }
+    @keyframes rightWalk { from { transform: rotate(12deg) translateY(-1px); } to { transform: rotate(-10deg) translateY(1px); } }
+    @keyframes hopSquash { 0% { transform: scale(1.1,.84) translateY(2px); } 100% { transform: scale(.94,1.18) translateY(-5px); } }
     @keyframes hoverGoat { from { transform: translateY(-3px) rotate(-1deg); } to { transform: translateY(3px) rotate(1deg); } }
-    @keyframes thrusterFlicker { from { transform: scaleY(.65); opacity:.6; } to { transform: scaleY(1.5); opacity:1; } }
-    @keyframes tailWhip { from { transform: rotate(-5deg); } to { transform: rotate(8deg); } }
+    @keyframes thrusterFlicker { from { transform: scaleY(.66); opacity:.46; } to { transform: scaleY(1.45); opacity:.88; } }
+    @keyframes tailWhip { from { transform: rotate(-4deg); } to { transform: rotate(9deg); } }
     @keyframes spinOnce { from { transform: rotate(0deg) scale(1); } to { transform: rotate(360deg) scale(1.04); } }
     @keyframes portalIn { from { transform: scale(1) rotate(0deg); opacity:1; } to { transform: scale(.02) rotate(360deg); opacity:0; } }
     @keyframes portalOut { from { transform: scale(.02) rotate(-360deg); opacity:0; } to { transform: scale(1) rotate(0deg); opacity:1; } }
@@ -415,101 +396,128 @@
       <canvas id="canvas-fx"></canvas>
       <div id="pet-float-container">
         <div id="pet" class="physics-idle_grounded">
-          <svg viewBox="0 0 220 220" aria-label="Goatky neon goat robot mascot">
+          <svg viewBox="0 0 220 220" aria-label="Goatky dark nebula red team avatar">
             <defs>
-              <linearGradient id="plateGradient" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1d1630"/>
-                <stop offset="48%" stop-color="#090713"/>
-                <stop offset="100%" stop-color="#2b123f"/>
+              <radialGradient id="voidOrbGradient" cx="50%" cy="48%" r="58%">
+                <stop offset="0%" stop-color="#000006"/>
+                <stop offset="54%" stop-color="#02010a"/>
+                <stop offset="78%" stop-color="#16051f"/>
+                <stop offset="100%" stop-color="#ec4899" stop-opacity=".42"/>
+              </radialGradient>
+              <radialGradient id="nebulaGradient" cx="50%" cy="48%" r="70%">
+                <stop offset="0%" stop-color="#ff1f8f" stop-opacity=".86"/>
+                <stop offset="42%" stop-color="#7e22ce" stop-opacity=".62"/>
+                <stop offset="78%" stop-color="#15051f" stop-opacity=".32"/>
+                <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="blackMistGradient" cx="50%" cy="50%" r="70%">
+                <stop offset="0%" stop-color="#000000"/>
+                <stop offset="62%" stop-color="#03010a"/>
+                <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="faceVoidGradient" cx="50%" cy="45%" r="58%">
+                <stop offset="0%" stop-color="#000000"/>
+                <stop offset="72%" stop-color="#020007"/>
+                <stop offset="100%" stop-color="#170220" stop-opacity=".25"/>
+              </radialGradient>
+              <linearGradient id="riftGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#7e22ce" stop-opacity="0"/>
+                <stop offset="42%" stop-color="#ec4899" stop-opacity=".84"/>
+                <stop offset="70%" stop-color="#a855f7" stop-opacity=".52"/>
+                <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
               </linearGradient>
-              <linearGradient id="hornGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#0b0713"/>
-                <stop offset="54%" stop-color="#181026"/>
-                <stop offset="100%" stop-color="#4c1d95"/>
+              <linearGradient id="mistStrokeGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ec4899" stop-opacity=".08"/>
+                <stop offset="42%" stop-color="#7e22ce" stop-opacity=".78"/>
+                <stop offset="100%" stop-color="#ff1f8f" stop-opacity=".14"/>
               </linearGradient>
               <linearGradient id="flameGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fdf4ff"/>
-                <stop offset="42%" stop-color="#ec4899"/>
-                <stop offset="100%" stop-color="#7e22ce"/>
+                <stop offset="0%" stop-color="#fdf4ff" stop-opacity=".78"/>
+                <stop offset="42%" stop-color="#ec4899" stop-opacity=".74"/>
+                <stop offset="100%" stop-color="#7e22ce" stop-opacity="0"/>
               </linearGradient>
+              <filter id="smokeBlur" x="-45%" y="-45%" width="190%" height="190%">
+                <feGaussianBlur stdDeviation="5.4"/>
+              </filter>
+              <filter id="voidBlur" x="-45%" y="-45%" width="190%" height="190%">
+                <feGaussianBlur stdDeviation="3.2"/>
+              </filter>
+              <filter id="nebulaGlow" x="-55%" y="-55%" width="210%" height="210%">
+                <feGaussianBlur stdDeviation="3.6" result="blur"/>
+                <feColorMatrix in="blur" type="matrix" values="1.3 0 0 0 0.08 0 0.4 0 0 0 0 0 1.5 0 0.2 0 0 0 1 0" result="glow"/>
+                <feMerge>
+                  <feMergeNode in="glow"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
             </defs>
 
-            <ellipse id="pet-shadow" cx="110" cy="184" rx="42" ry="7"/>
-            <circle class="hud-ring-outer" cx="110" cy="105" r="100"/>
-            <circle class="hud-ring-mid" cx="110" cy="105" r="82"/>
-            <circle class="hud-ring-inner" cx="110" cy="105" r="62"/>
-            <rect class="spark" x="108" y="8" width="5" height="13" rx="2"/>
-            <rect class="spark" x="187" y="88" width="5" height="13" rx="2" transform="rotate(80 189 94)"/>
-            <rect class="spark" x="28" y="88" width="5" height="13" rx="2" transform="rotate(-80 30 94)"/>
-            <rect class="spark" x="55" y="23" width="4" height="11" rx="2" transform="rotate(-34 57 28)"/>
-            <rect class="spark" x="161" y="23" width="4" height="11" rx="2" transform="rotate(34 163 28)"/>
+            <ellipse id="pet-shadow" cx="110" cy="184" rx="52" ry="8"/>
+            <circle class="hud-ring-outer" cx="110" cy="106" r="104"/>
+            <circle class="hud-ring-mid" cx="110" cy="106" r="84"/>
+            <circle class="hud-ring-inner" cx="110" cy="106" r="60"/>
+            <line class="reticle-line" x1="110" y1="4" x2="110" y2="51"/>
+            <line class="reticle-line" x1="110" y1="165" x2="110" y2="213"/>
+            <line class="reticle-line" x1="8" y1="106" x2="55" y2="106"/>
+            <line class="reticle-line" x1="165" y1="106" x2="212" y2="106"/>
+            <circle class="void-orb deep" cx="27" cy="37" r="16"/>
+            <circle class="void-orb" cx="190" cy="36" r="11"/>
+            <circle class="void-orb deep" cx="191" cy="180" r="18"/>
+            <circle class="spark" cx="110" cy="17" r="2.6"/>
+            <circle class="spark" cx="44" cy="106" r="2.2"/>
+            <circle class="spark" cx="178" cy="107" r="2.2"/>
+            <circle class="spark" cx="110" cy="190" r="2.4"/>
 
             <g id="goatky-character">
-              <g id="goat-tail">
-                <path class="tail-line" d="M 85 151 C 62 151, 58 170, 69 176 C 78 181, 87 171, 76 165"/>
-                <polygon class="tail-tip" points="63,173 49,180 62,187 66,179"/>
-              </g>
-
-              <path class="horn-main" d="M 86 68 C 69 31, 46 22, 31 34 C 52 43, 66 57, 80 81 Z"/>
-              <path class="horn-edge" d="M 79 68 C 64 39, 47 30, 34 35"/>
-              <path class="horn-edge" d="M 69 56 L 55 50" opacity=".75"/>
-              <path class="horn-edge" d="M 59 45 L 47 40" opacity=".55"/>
-
-              <path class="horn-main" d="M 134 68 C 151 31, 174 22, 189 34 C 168 43, 154 57, 140 81 Z"/>
-              <path class="horn-edge" d="M 141 68 C 156 39, 173 30, 186 35"/>
-              <path class="horn-edge" d="M 151 56 L 165 50" opacity=".75"/>
-              <path class="horn-edge" d="M 161 45 L 173 40" opacity=".55"/>
-
-              <path class="dark-plate" d="M 70 91 L 43 83 L 57 105 L 76 103 Z"/>
-              <path class="neon-line" d="M 50 87 L 66 97" opacity=".7"/>
-              <path class="dark-plate" d="M 150 91 L 177 83 L 163 105 L 144 103 Z"/>
-              <path class="neon-line" d="M 170 87 L 154 97" opacity=".7"/>
-
-              <path class="plate" d="M 78 73 L 142 73 L 154 88 L 149 121 L 134 136 L 86 136 L 71 121 L 66 88 Z"/>
-              <path class="visor-shell" d="M 77 87 L 143 87 L 148 96 L 144 118 L 132 126 L 88 126 L 76 118 L 72 96 Z"/>
-              <path class="visor-glass" d="M 82 91 L 138 91 L 142 98 L 139 114 L 128 121 L 92 121 L 81 114 L 78 98 Z"/>
-              <path class="visor-reflection" d="M 88 96 C 103 91, 119 91, 134 96"/>
-              <path class="neon-line" d="M 102 82 L 110 89 L 118 82" opacity=".78"/>
-
-              <g class="eyes-open">
-                <polygon class="eye-shape" points="91,102 106,106 101,113 88,109"/>
-                <polygon class="eye-shape" points="129,102 114,106 119,113 132,109"/>
-              </g>
-              <g class="eyes-closed" style="display:none;">
-                <path d="M 90 107 L 104 108"/>
-                <path d="M 116 108 L 130 107"/>
-              </g>
-
-              <path id="mouth-open" d="M 96 116 L 102 121 L 107 116 L 112 122 L 118 116 L 124 120"/>
-              <path id="mouth-closed" d="M 100 118 L 120 118" style="display:none;"/>
-
-              <path class="joint" d="M 101 135 L 119 135 L 116 143 L 104 143 Z"/>
-              <path class="plate" d="M 82 142 L 138 142 L 130 171 L 110 178 L 90 171 Z"/>
-              <circle class="core" cx="110" cy="155" r="13"/>
-              <path class="goat-emblem" d="M 102 157 C 101 149, 107 149, 110 155 C 113 149, 119 149, 118 157"/>
-              <path class="goat-emblem" d="M 106 160 L 110 165 L 114 160"/>
-              <path class="goat-emblem" d="M 103 153 C 99 149, 98 145, 100 142" opacity=".7"/>
-              <path class="goat-emblem" d="M 117 153 C 121 149, 122 145, 120 142" opacity=".7"/>
+              <path class="rift" d="M 38 91 C 60 59, 90 55, 108 78 C 126 52, 158 60, 182 88"/>
+              <path class="rift" d="M 42 132 C 76 114, 103 135, 116 158 C 135 129, 164 127, 188 147" opacity=".66"/>
+              <ellipse class="smoke-lobe" cx="82" cy="96" rx="48" ry="36" transform="rotate(-20 82 96)"/>
+              <ellipse class="smoke-lobe" cx="139" cy="93" rx="50" ry="35" transform="rotate(17 139 93)"/>
+              <ellipse class="smoke-lobe" cx="104" cy="133" rx="58" ry="43" transform="rotate(8 104 133)" opacity=".58"/>
+              <ellipse class="smoke-lobe" cx="146" cy="143" rx="42" ry="33" transform="rotate(-25 146 143)" opacity=".56"/>
+              <ellipse class="smoke-lobe shadow" cx="110" cy="108" rx="55" ry="61"/>
+              <ellipse class="smoke-lobe shadow" cx="113" cy="119" rx="39" ry="52" opacity=".96"/>
 
               <g id="left-arm">
-                <path class="joint" d="M 83 145 L 69 154 L 73 163 L 88 154 Z"/>
-                <path class="claw" d="M 66 161 L 57 168 L 68 169 Z"/>
+                <path class="mist-tendril" d="M 72 104 C 48 108, 31 125, 22 149"/>
+                <path class="mist-tendril edge" d="M 61 106 C 42 113, 33 125, 27 139"/>
               </g>
               <g id="right-arm">
-                <path class="joint" d="M 137 145 L 151 154 L 147 163 L 132 154 Z"/>
-                <path class="claw" d="M 154 161 L 163 168 L 152 169 Z"/>
+                <path class="mist-tendril" d="M 148 104 C 173 108, 192 126, 199 150"/>
+                <path class="mist-tendril edge" d="M 158 106 C 178 115, 187 128, 193 143"/>
+              </g>
+
+              <g id="goat-tail">
+                <path class="mist-tendril" d="M 92 146 C 69 164, 61 184, 78 191 C 92 197, 105 179, 92 170"/>
+                <path class="mist-tendril edge" d="M 84 153 C 68 169, 68 183, 80 187"/>
               </g>
 
               <g id="left-leg">
-                <path class="joint" d="M 94 169 L 86 183 L 96 186 L 104 173 Z"/>
-                <path class="hoof" d="M 82 185 L 98 185 L 92 194 Z"/>
+                <path class="mist-tendril" d="M 99 149 C 88 166, 82 177, 72 191"/>
+                <path class="mist-tendril edge" d="M 95 157 C 86 172, 80 181, 74 191"/>
               </g>
               <g id="right-leg">
-                <path class="joint" d="M 126 169 L 134 183 L 124 186 L 116 173 Z"/>
-                <path class="hoof" d="M 122 185 L 138 185 L 128 194 Z"/>
+                <path class="mist-tendril" d="M 124 149 C 135 166, 143 177, 153 191"/>
+                <path class="mist-tendril edge" d="M 126 157 C 136 172, 145 181, 151 191"/>
               </g>
 
-              <polygon id="thruster-flame" points="102,174 118,174 110,201"/>
+              <path class="face-void" d="M 72 65 C 86 47, 133 47, 148 65 C 162 82, 158 122, 138 139 C 126 151, 94 151, 82 139 C 62 121, 58 82, 72 65 Z"/>
+              <ellipse class="core" cx="110" cy="132" rx="7" ry="5"/>
+              <path class="neon-line" d="M 76 69 C 88 56, 132 56, 144 69" opacity=".42"/>
+              <path class="neon-line" d="M 66 114 C 80 145, 140 146, 154 113" opacity=".18"/>
+
+              <g class="eyes-open">
+                <path class="eye-shape" d="M 83 96 C 93 88, 101 88, 106 96 C 98 99, 91 100, 83 96 Z"/>
+                <path class="eye-shape" d="M 137 96 C 127 88, 119 88, 114 96 C 122 99, 129 100, 137 96 Z"/>
+              </g>
+              <g class="eyes-closed" style="display:none;">
+                <path d="M 85 97 C 92 95, 99 95, 105 98"/>
+                <path d="M 115 98 C 121 95, 128 95, 135 97"/>
+              </g>
+
+              <path id="mouth-open" d="M 91 117 C 101 129, 119 129, 130 117"/>
+              <path id="mouth-closed" d="M 98 119 C 106 123, 116 123, 124 119" style="display:none;"/>
+              <polygon id="thruster-flame" points="96,150 124,150 110,205"/>
             </g>
           </svg>
         </div>
@@ -877,8 +885,8 @@
       if (Math.random() <= threshold) return;
       const phrases = [
         "Todo estable.",
-        "Goatky activo.",
-        "Modo neón listo.",
+        "Sombra activa.",
+        "Nebulosa preparada.",
         "Memoria local estable.",
         "Esperando orden, jefe.",
         "Ronda de escritorio activa."

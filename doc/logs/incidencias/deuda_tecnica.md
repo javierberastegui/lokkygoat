@@ -16,3 +16,5 @@ Registrar deuda técnica no urgente.
 
 - `[ ]` Añadir timeouts a las peticiones de fetch de los adaptadores de IA en `src/providers/`.
 - `[ ]` Validar esquemas de configuración JSON en `src/config/configService.js` al guardar para evitar ficheros corruptos.
+- `[ ]` Adaptar las físicas y límites de colisión de `petPhysics.js` para soportar dinámicamente configuraciones multipantalla complejas.
+- `[ ]` Parametrizar la clase `PetPhysics` para que consuma la tasa de refresco (delta time) dinámicamente en lugar de asumir 25ms estáticos.

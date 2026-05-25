@@ -41,3 +41,36 @@ Para continuidad abierta, usar el relevo del dominio correspondiente.
 ### Siguiente paso sugerido
 
 - Añadir animaciones personalizadas en el visor cuando el usuario pase el cursor (hover), como barras de escaneo horizontales adicionales.
+
+### Etapa
+
+- Fecha: 2026-05-25
+- Objetivo: Evolucionar visualmente a Goatky a una cabra-bot demoníaca Red Team y enlazar animaciones físicas.
+- Contexto breve: Se rediseñó el SVG en `pet.html` para incorporar cuernos cibernéticos curvos y largos, una cola en forma de diablo, visor negro profundo, sonrisa traviesa y patitas móviles. Se vincularon animaciones CSS al estado de física (`behaviorState`) transmitido por IPC.
+
+### Cambios
+
+- Archivos nuevos: ninguno.
+- Archivos modificados:
+  - `pet.html`
+- Superficies afectadas:
+  - Ventana flotante de la mascota (`petWindow`).
+- Tests/validaciones: `node --check`, análisis sintáctico.
+
+### Decisiones
+
+- Utilizar animaciones sobre el nodo del grupo interno del SVG (`#goatky-character`) para evitar interferir con los giros y transformaciones 2D aplicados por JavaScript desde las coordenadas físicas.
+- Cambiar la paleta por defecto a tonos violeta y rojo para la estética demoníaca cibernética.
+- Mapear clases de CSS (`physics-grounded_walk`, `physics-hop`, `physics-fly`, `physics-idle_grounded`) a partir de la propiedad `behaviorState` del evento `pet:step`.
+
+### Validación
+
+- Validación sintáctica del HTML y scripts internos completada.
+
+### Incidencias detectadas
+
+- Ninguna.
+
+### Siguiente paso sugerido
+
+- Añadir un efecto de glitch o ruido en el visor cuando se reciban errores de los proveedores de IA.

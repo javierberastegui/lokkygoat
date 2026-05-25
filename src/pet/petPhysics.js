@@ -1,15 +1,19 @@
 class PetPhysics {
   constructor() {
     this.vx = 0.25;
-    this.vy = 0.20;
+    this.vy = 0.0;
     this.targetVx = 0.25;
-    this.targetVy = 0.20;
+    this.targetVy = 0.0;
 
-    this.behaviorState = "walk";
-    this.behaviorTicks = 0;
+    this.behaviorState = "idle_grounded";
+    this.behaviorTicks = 100;
     this.lastWarpTime = Date.now();
-    this.wanderAngle = Math.random() * Math.PI * 2;
+    this.wanderAngle = 0.0;
     this.speedBase = 0.25;
+
+    // Physics constants
+    this.gravity = 0.18; 
+    this.yVelocity = 0.0; 
   }
 
   update(bounds, screenArea, skillCount, movementMode, lastActivity) {
@@ -27,75 +31,71 @@ class PetPhysics {
     let ny = bounds.y;
     const b = bounds;
     const a = screenArea;
+    const groundY = a.y + a.height - b.height;
 
     if (movementMode !== "suave") {
       if (this.behaviorTicks <= 0) {
         const rand = Math.random();
         
-        let walkThreshold = 0.70;
-        let dashThreshold = 0.75;
-        let haltThreshold = 0.95;
-        
-        if (skillCount <= 2) {
-          walkThreshold = 0.75;
-          dashThreshold = 0.80;
-          haltThreshold = 1.0;
-        } else if (skillCount <= 5) {
-          walkThreshold = 0.70;
-          dashThreshold = 0.75;
-          haltThreshold = 0.95;
-        } else {
-          walkThreshold = 0.50;
-          dashThreshold = 0.55;
-          haltThreshold = 0.95;
-        }
-        
-        if (rand < walkThreshold) {
-          this.behaviorState = "walk";
-          this.behaviorTicks = Math.floor(Math.random() * 400) + 300;
+        // Behaviors: grounded_walk (40%), idle_grounded (30%), hop (15%), fly (10%), warp (5%)
+        if (rand < 0.40) {
+          this.behaviorState = "grounded_walk";
+          this.behaviorTicks = Math.floor(Math.random() * 200) + 150; 
           const speedScale = skillCount <= 2 ? 0.95 : (skillCount <= 5 ? 1.3 : 1.7);
-          this.speedBase = (0.045 + Math.random() * 0.05) * speedScale;
-          this.wanderAngle = Math.random() * Math.PI * 2;
-        } else if (rand < dashThreshold) {
-          this.behaviorState = "dash";
-          this.behaviorTicks = Math.floor(Math.random() * 150) + 100;
-          const speedScale = skillCount <= 2 ? 1.0 : (skillCount <= 5 ? 1.3 : 1.6);
-          this.speedBase = (0.13 + Math.random() * 0.09) * speedScale;
-          this.wanderAngle = Math.random() * Math.PI * 2;
-        } else if (rand < haltThreshold) {
-          this.behaviorState = "halt";
-          const haltDuration = skillCount >= 6 ? (Math.floor(Math.random() * 800) + 400) : (Math.floor(Math.random() * 500) + 300);
-          this.behaviorTicks = haltDuration;
-          this.speedBase = 0;
+          this.speedBase = (0.05 + Math.random() * 0.05) * speedScale;
+          this.targetVx = (Math.random() > 0.5 ? 1 : -1) * this.speedBase;
+          this.targetVy = 0;
+        } else if (rand < 0.70) {
+          this.behaviorState = "idle_grounded";
+          this.behaviorTicks = Math.floor(Math.random() * 300) + 200; 
           this.targetVx = 0;
           this.targetVy = 0;
-          if (Math.random() > 0.4) {
-            actions.push("celebrate");
-          }
+          this.speedBase = 0;
+        } else if (rand < 0.85) {
+          this.behaviorState = "hop";
+          this.behaviorTicks = Math.floor(Math.random() * 60) + 40; 
+          const speedScale = skillCount <= 2 ? 1.0 : (skillCount <= 5 ? 1.3 : 1.6);
+          this.speedBase = (0.06 + Math.random() * 0.06) * speedScale;
+          this.targetVx = (Math.random() > 0.5 ? 1 : -1) * this.speedBase;
+          this.yVelocity = -4.5 - Math.random() * 2.0; 
+        } else if (rand < 0.95) {
+          this.behaviorState = "fly";
+          this.behaviorTicks = Math.floor(Math.random() * 250) + 150; 
+          const speedScale = skillCount <= 2 ? 0.8 : (skillCount <= 5 ? 1.1 : 1.4);
+          this.speedBase = (0.08 + Math.random() * 0.06) * speedScale;
+          this.wanderAngle = Math.random() * Math.PI * 2;
         } else {
-          if (Date.now() - this.lastWarpTime > 12000) {
+          if (Date.now() - this.lastWarpTime > 15000) {
             this.behaviorState = "warp";
             this.lastWarpTime = Date.now();
           } else {
-            this.behaviorState = "walk";
-            this.behaviorTicks = 160;
+            this.behaviorState = "grounded_walk";
+            this.behaviorTicks = 120;
+            this.speedBase = 0.05;
+            this.targetVx = (Math.random() > 0.5 ? 1 : -1) * this.speedBase;
+            this.targetVy = 0;
           }
         }
-      }
-      
-      if (this.behaviorState === "walk" || this.behaviorState === "dash") {
-        this.wanderAngle += (Math.random() - 0.5) * 0.08;
-        this.targetVx = Math.cos(this.wanderAngle) * this.speedBase;
-        this.targetVy = Math.sin(this.wanderAngle) * this.speedBase;
       }
       
       this.behaviorTicks--;
     } else {
-      this.behaviorState = "walk";
-      this.wanderAngle += (Math.random() - 0.5) * 0.08;
-      this.speedBase = 0.045;
-      this.targetVx = Math.cos(this.wanderAngle) * this.speedBase;
-      this.targetVy = Math.sin(this.wanderAngle) * this.speedBase;
+      // Quiet mode ("suave")
+      if (this.behaviorTicks <= 0) {
+        if (Math.random() < 0.7) {
+          this.behaviorState = "idle_grounded";
+          this.behaviorTicks = 200;
+          this.targetVx = 0;
+          this.targetVy = 0;
+        } else {
+          this.behaviorState = "grounded_walk";
+          this.behaviorTicks = 150;
+          this.speedBase = 0.04;
+          this.targetVx = (Math.random() > 0.5 ? 1 : -1) * this.speedBase;
+          this.targetVy = 0;
+        }
+      }
+      this.behaviorTicks--;
     }
 
     if (this.behaviorState === "warp") {
@@ -124,70 +124,77 @@ class PetPhysics {
       };
     }
 
-    // Obstacle Avoidance
-    if (this.behaviorState === "walk" || this.behaviorState === "dash") {
-      const margin = 120;
-      let avoidForceX = 0;
-      let avoidForceY = 0;
+    // Apply movement according to category (flying vs. grounded/falling)
+    if (this.behaviorState === "fly") {
+      this.wanderAngle += (Math.random() - 0.5) * 0.12;
+      this.targetVx = Math.cos(this.wanderAngle) * this.speedBase;
+      this.targetVy = Math.sin(this.wanderAngle) * this.speedBase;
 
-      if (b.x < a.x + margin) {
-        avoidForceX += ((a.x + margin - b.x) / margin) * 0.15;
-      } else if (b.x + b.width > a.x + a.width - margin) {
-        avoidForceX -= ((b.x + b.width - (a.x + a.width - margin)) / margin) * 0.15;
-      }
+      this.vx = this.vx + (this.targetVx - this.vx) * 0.03;
+      this.vy = this.vy + (this.targetVy - this.vy) * 0.03;
 
-      if (b.y < a.y + margin) {
-        avoidForceY += ((a.y + margin - b.y) / margin) * 0.15;
-      } else if (b.y + b.height > a.y + a.height - margin) {
-        avoidForceY -= ((b.y + b.height - (a.y + a.height - margin)) / margin) * 0.15;
-      }
+      let speedMultiplier = 1.0;
+      if (movementMode === "suave") speedMultiplier = 0.35;
+      else if (movementMode === "vivo") speedMultiplier = 1.6;
 
-      if (avoidForceX !== 0 || avoidForceY !== 0) {
-        this.targetVx += avoidForceX;
-        this.targetVy += avoidForceY;
-        const actSpeed = Math.sqrt(this.targetVx * this.targetVx + this.targetVy * this.targetVy);
-        if (actSpeed > this.speedBase) {
-          this.targetVx = (this.targetVx / actSpeed) * this.speedBase;
-          this.targetVy = (this.targetVy / actSpeed) * this.speedBase;
-        }
-        this.wanderAngle = Math.atan2(this.targetVy, this.targetVx);
-      }
-    }
-
-    this.vx = this.vx + (this.targetVx - this.vx) * 0.03;
-    this.vy = this.vy + (this.targetVy - this.vy) * 0.03;
-
-    let speedMultiplier = 1.0;
-    if (movementMode === "suave") {
-      speedMultiplier = 0.35;
-    } else if (movementMode === "vivo") {
-      speedMultiplier = 1.6;
-    }
-
-    nx = b.x + this.vx * speedMultiplier;
-    ny = b.y + this.vy * speedMultiplier;
-    let bounced = false;
-
-    if (nx <= a.x || nx >= a.x + a.width - b.width) {
-      this.targetVx = -this.targetVx;
-      this.vx = -this.vx;
-      this.wanderAngle = Math.atan2(this.targetVy, this.targetVx);
       nx = b.x + this.vx * speedMultiplier;
-      bounced = true;
-    }
-
-    if (ny <= a.y || ny >= a.y + a.height - b.height) {
-      this.targetVy = -this.targetVy;
-      this.vy = -this.vy;
-      this.wanderAngle = Math.atan2(this.targetVy, this.targetVx);
       ny = b.y + this.vy * speedMultiplier;
-      bounced = true;
-    }
 
-    if (bounced) {
-      this.vx += (Math.random() - 0.5) * 0.04;
-      this.vy += (Math.random() - 0.5) * 0.03;
-      actions.push("bounce");
+      // Bounce limits
+      let bounced = false;
+      if (nx <= a.x || nx >= a.x + a.width - b.width) {
+        this.targetVx = -this.targetVx;
+        this.vx = -this.vx;
+        this.wanderAngle = Math.atan2(this.targetVy, this.targetVx);
+        nx = b.x + this.vx * speedMultiplier;
+        bounced = true;
+      }
+      if (ny <= a.y || ny >= groundY) {
+        this.targetVy = -this.targetVy;
+        this.vy = -this.vy;
+        this.wanderAngle = Math.atan2(this.targetVy, this.targetVx);
+        ny = b.y + this.vy * speedMultiplier;
+        bounced = true;
+      }
+
+      if (bounced) {
+        this.vx += (Math.random() - 0.5) * 0.04;
+        this.vy += (Math.random() - 0.5) * 0.03;
+        actions.push("bounce");
+      }
+    } else {
+      // Grounded state / falling physics
+      this.vx = this.vx + (this.targetVx - this.vx) * 0.05;
+
+      let speedMultiplier = 1.0;
+      if (movementMode === "suave") speedMultiplier = 0.35;
+      else if (movementMode === "vivo") speedMultiplier = 1.6;
+
+      nx = b.x + this.vx * speedMultiplier;
+
+      // Apply gravity to vertical speed if above ground
+      if (ny < groundY) {
+        this.yVelocity += this.gravity;
+        ny += this.yVelocity;
+      } else {
+        ny = groundY;
+        this.yVelocity = 0;
+      }
+
+      // Check horizontal boundary bounces
+      let bounced = false;
+      if (nx <= a.x || nx >= a.x + a.width - b.width) {
+        this.targetVx = -this.targetVx;
+        this.vx = -this.vx;
+        nx = b.x + this.vx * speedMultiplier;
+        bounced = true;
+      }
+
+      if (bounced) {
+        actions.push("bounce");
+      }
+
+      this.vy = this.yVelocity;
     }
 
     const clamp = (x, y, w, h) => {
@@ -215,8 +222,10 @@ class PetPhysics {
   finishWarp(bounds, screenArea) {
     const a = screenArea;
     const b = bounds;
+    
+    // Warping can place Goatky in the air, allowing a dramatic landing!
     const nx = a.x + Math.random() * (a.width - b.width);
-    const ny = a.y + Math.random() * (a.height - b.height);
+    const ny = a.y + Math.random() * (a.height - b.height) * 0.6; // warp within upper 60%
     
     const clamp = (x, y, w, h) => {
       return {
@@ -227,8 +236,9 @@ class PetPhysics {
     
     const safe = clamp(nx, ny, b.width, b.height);
     
-    this.behaviorState = "walk";
+    this.behaviorState = "grounded_walk";
     this.behaviorTicks = 160;
+    this.yVelocity = 0;
 
     return {
       x: Math.round(safe.x),

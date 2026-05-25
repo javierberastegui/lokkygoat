@@ -20,6 +20,7 @@ El proyecto se encuentra modularizado bajo la siguiente arquitectura estable:
 - **Bus de Eventos Estructurados:** Implementado en `src/events/eventBus.js` con procesamiento de reglas.
 - **Seguridad en Logs:** Sanitización de `apiKey` activa al cargar/guardar configuración y emitir eventos (incluyendo las nuevas claves estructuradas).
 - **Superficies Visuales:** Ventanas de chat, mascota y ajustes conectadas vía IPC.
+- **Comando Toggle y Atajo Global:** Script `toggle_lokkygoat.sh` y atajo global F7 configurado en KDE para encender/apagar la aplicación con detección dinámica del entorno gráfico.
 
 ## Decisión importante
 

@@ -33,8 +33,8 @@ Para historial de etapas, usar el log del dominio.
 
 ## Validaciones pendientes
 
-- Pruebas de guardado de configuraciones corrompidas para asegurar que se recupera elegantemente usando valores por defecto.
+- Probar la migración automática en una instalación con configuraciones previas corruptas.
 
 ## Siguiente micro-paso recomendado
 
-- Agregar un try-catch adicional y una copia de seguridad automática antes de sobrescribir el archivo de configuración.
+- Agregar un try-catch adicional y una copia de seguridad automática antes de sobrescribir el archivo de configuración en `saveConfig`.

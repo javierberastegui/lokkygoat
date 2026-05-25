@@ -4,6 +4,18 @@
   <meta charset="utf-8" />
   <title>Lokkygoat / Goatky</title>
   <style>
+    :root {
+      --glow-color: rgba(236, 72, 153, 0.92);
+      --ring1-color: #7e22ce;
+      --ring2-color: #a855f7;
+      --ring3-color: #ec4899;
+      --core-stroke: #ec4899;
+      --core-fill: rgba(88, 28, 135, 0.42);
+      --face-color: #fdf4ff;
+      --plate-edge: #3b1f57;
+      --pet-scale: 1;
+    }
+
     html, body {
       margin: 0;
       width: 100%;
@@ -11,7 +23,7 @@
       overflow: hidden;
       background: transparent;
       user-select: none;
-      font-family: system-ui, sans-serif;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
     #stage {
@@ -29,99 +41,39 @@
       height: 240px;
       display: grid;
       place-items: center;
+      overflow: visible;
     }
 
     #bubble {
       position: absolute;
-      top: 8px;
+      top: 2px;
       left: 50%;
       transform: translateX(-50%);
-      max-width: 205px;
+      max-width: 210px;
       padding: 8px 12px;
-      border-radius: 18px;
-      background: rgba(9, 9, 11, 0.96);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      color: #f8fafc;
-      font-size: 12px;
+      border-radius: 15px;
+      background: rgba(5, 5, 8, 0.94);
+      border: 1px solid rgba(236, 72, 153, 0.58);
+      color: #fce7f3;
+      font-size: 11px;
       line-height: 1.25;
       text-align: center;
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.65);
-      z-index: 2;
+      box-shadow: 0 0 18px rgba(236, 72, 153, 0.22), 0 12px 28px rgba(0, 0, 0, 0.72);
+      z-index: 7;
       pointer-events: none;
+      text-shadow: 0 0 9px rgba(236, 72, 153, 0.68);
     }
 
     #bubble::after {
       content: "";
       position: absolute;
       left: 50%;
-      bottom: -9px;
+      bottom: -8px;
       transform: translateX(-50%);
-      width: 18px;
-      height: 18px;
-      background: rgba(9, 9, 11, 0.96);
+      width: 16px;
+      height: 16px;
+      background: rgba(5, 5, 8, 0.94);
       clip-path: polygon(50% 100%, 0 0, 100% 0);
-    }
-
-    :root {
-      --glow-color: rgba(147, 51, 234, 0.8);
-      --float-duration: 4s;
-      --spin-r1-duration: 14s;
-      --spin-r2-duration: 10s;
-      --spin-r3-duration: 3s;
-      --ring1-color: #7e22ce;
-      --ring2-color: #a855f7;
-      --ring3-color: #ec4899;
-      --core-stroke: #d946ef;
-      --core-fill: rgba(76, 29, 149, 0.35);
-      --face-color: #fdf4ff;
-    }
-
-    #pet-float-container {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      place-items: center;
-      transform-origin: 50% 50%;
-      pointer-events: none;
-    }
-
-    #pet {
-      width: calc(165px * var(--pet-scale, 1));
-      height: calc(165px * var(--pet-scale, 1));
-      margin-top: 40px;
-      cursor: pointer;
-      filter: drop-shadow(0 0 18px var(--glow-color));
-      -webkit-app-region: no-drag;
-      transition: filter 0.5s ease, transform 0.12s cubic-bezier(0.25, 0.8, 0.25, 1);
-      transform-origin: 50% 50%;
-      z-index: 2;
-      pointer-events: auto;
-    }
-
-    #pet.bounce {
-      animation: spinOnce 700ms ease-in-out 1;
-    }
-
-    #pet.celebrate {
-      animation: spinOnce 1200ms ease-in-out 2;
-    }
-
-    #pet.portal-entering {
-      animation: portalIn 500ms cubic-bezier(0.55, 0.055, 0.675, 0.19) 1 forwards;
-    }
-
-    #pet.portal-exiting {
-      animation: portalOut 600ms cubic-bezier(0.215, 0.61, 0.355, 1) 1 forwards;
-    }
-
-    @keyframes portalIn {
-      0% { transform: scale(1) rotate(0deg); opacity: 1; filter: drop-shadow(0 0 18px var(--glow-color)) brightness(1); }
-      100% { transform: scale(0.01) rotate(360deg); opacity: 0; filter: drop-shadow(0 0 45px #a855f7) brightness(3); }
-    }
-
-    @keyframes portalOut {
-      0% { transform: scale(0.01) rotate(-360deg); opacity: 0; filter: drop-shadow(0 0 45px #22d3ee) brightness(3); }
-      100% { transform: scale(1) rotate(0deg); opacity: 1; filter: drop-shadow(0 0 18px var(--glow-color)) brightness(1); }
     }
 
     #canvas-fx {
@@ -134,460 +86,323 @@
       z-index: 1;
     }
 
-    #pet.dashing {
-      filter: brightness(1.2) drop-shadow(0 0 25px var(--ring3-color)) !important;
-    }
-
-    #pet.glow-bright {
-      animation: coreGlowFlash 1.5s ease-in-out infinite;
-    }
-
-    #pet:hover {
-      filter: drop-shadow(0 0 25px rgba(239,68,68,.9));
-      transform: scale(1.04);
-    }
-
-    svg {
+    #pet-float-container {
       width: 100%;
       height: 100%;
-      overflow: visible;
-    }
-
-    /* Cybernetic Demonic Droid Styling */
-    .droid-body {
-      fill: #f8fafc;
-      stroke: #64748b;
-      stroke-width: 3.2;
-      stroke-linejoin: round;
-    }
-
-    .droid-joints {
-      fill: #334155;
-      stroke: #1e293b;
-      stroke-width: 2;
-    }
-
-    .droid-visor {
-      fill: #020617;
-      stroke: #0f172a;
-      stroke-width: 2.5;
-    }
-
-    .droid-visor-reflection {
-      stroke: rgba(255, 255, 255, 0.08);
-      stroke-width: 1.5;
-      fill: none;
-      stroke-linecap: round;
-    }
-
-    /* HUD and Rings */
-    .ring1 { stroke: var(--ring1-color); animation: spin var(--spin-r1-duration) linear infinite; transform-origin: 50% 50%; transition: stroke 0.5s ease; }
-    .ring2 { stroke: var(--ring2-color); animation: spinReverse var(--spin-r2-duration) linear infinite; transform-origin: 50% 50%; transition: stroke 0.5s ease; }
-    .ring3 { stroke: var(--ring3-color); animation: pulse var(--spin-r3-duration) ease-in-out infinite; transform-origin: 50% 50%; transition: stroke 0.5s ease; }
-    .core  { stroke: var(--core-stroke); fill: var(--core-fill); animation: corePulse 2.8s ease-in-out infinite; transform-origin: 50% 50%; transition: stroke 0.5s ease, fill 0.5s ease; }
-    .face-el { fill: var(--face-color); stroke: var(--face-color); transition: fill 0.5s ease, stroke 0.5s ease; }
-    .radar-sweep { fill: rgba(239, 68, 68, .12); opacity: 0; transform-origin: 50% 50%; pointer-events: none; }
-    .radar-orbit { fill: none; stroke: var(--ring3-color); stroke-width: 2.5; stroke-dasharray: 10 8; opacity: 0; transform-origin: 50% 50%; filter: drop-shadow(0 0 9px var(--ring3-color)); }
-    .sweep-line { stroke: var(--ring3-color); stroke-width: 4; stroke-linecap: round; opacity: 0; transform-origin: 50% 50%; filter: drop-shadow(0 0 12px var(--ring3-color)); }
-    .particle { fill: var(--ring3-color); opacity: 0; transform-origin: 50% 50%; filter: drop-shadow(0 0 8px var(--ring3-color)); }
-
-    #pet.scene-idle {
-      animation: idleBreath 3.8s ease-in-out infinite;
-    }
-
-    #pet.scene-thinking,
-    #pet.scene-executing,
-    #pet.scene-success,
-    #pet.scene-error {
-      filter: drop-shadow(0 0 32px var(--glow-color));
-    }
-
-    #pet.scene-thinking .ring1 { animation-duration: 22s; }
-    #pet.scene-thinking .ring2 { animation-duration: 17s; }
-    #pet.scene-thinking .ring3 { animation-duration: 4.5s; }
-    #pet.scene-thinking .eyes-open {
-      animation: blinkSoft 4.2s ease-in-out infinite;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
       transform-origin: 50% 50%;
     }
 
-    #pet.scene-executing {
-      animation: executePulse 820ms ease-in-out infinite;
-      filter: drop-shadow(0 0 46px rgba(239, 68, 68, 1));
+    #pet {
+      width: calc(178px * var(--pet-scale, 1));
+      height: calc(178px * var(--pet-scale, 1));
+      margin-top: 34px;
+      cursor: pointer;
+      -webkit-app-region: no-drag;
+      z-index: 3;
+      pointer-events: auto;
+      transform-origin: 50% 74%;
+      transition: filter 0.25s ease, transform 0.08s linear;
+      filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.95)) drop-shadow(0 0 28px rgba(126, 34, 206, 0.62));
     }
-    #pet.scene-executing .ring1 { animation: orbitFast 1.2s linear infinite; stroke-width: 5; opacity: 1; }
-    #pet.scene-executing .ring2 { animation: orbitReverseFast 900ms linear infinite; stroke-width: 4; opacity: 1; }
-    #pet.scene-executing .ring3 { animation: orbitFast 1.6s linear infinite; stroke-width: 3; opacity: 1; }
-    #pet.scene-executing .radar-orbit { opacity: .95; animation: orbitFast 1.4s linear infinite; }
-    #pet.scene-executing .sweep-line { opacity: 1; animation: orbitFast 1.15s linear infinite; }
-    #pet.scene-executing .radar-sweep {
-      opacity: .98;
-      animation: orbitFast 1.15s linear infinite;
+
+    #pet:hover {
+      filter: drop-shadow(0 0 16px rgba(236, 72, 153, 1)) drop-shadow(0 0 42px rgba(168, 85, 247, 0.86));
     }
-    #pet.scene-executing .particle {
-      opacity: .95;
-      animation: particleOrbit 1.7s linear infinite;
+
+    svg { width: 100%; height: 100%; overflow: visible; }
+
+    .hud-ring-outer, .hud-ring-mid, .hud-ring-inner {
+      fill: none;
+      transform-origin: 110px 110px;
+      filter: drop-shadow(0 0 8px currentColor);
     }
-    #pet.scene-success {
-      animation: successBounce 2s ease-out 1;
+
+    .hud-ring-outer { stroke: var(--ring3-color); stroke-width: 2; stroke-dasharray: 10 18; opacity: .78; animation: spin 18s linear infinite; }
+    .hud-ring-mid { stroke: var(--ring2-color); stroke-width: 3.5; stroke-dasharray: 34 22; opacity: .72; animation: spinReverse 15s linear infinite; }
+    .hud-ring-inner { stroke: var(--ring1-color); stroke-width: 2; stroke-dasharray: 20 15; opacity: .56; animation: spin 10s linear infinite; }
+
+    .spark {
+      fill: var(--ring3-color);
+      opacity: .7;
+      filter: drop-shadow(0 0 8px var(--ring3-color));
+      animation: sparkBlink 2.6s ease-in-out infinite;
     }
-    #pet.scene-success .core {
-      animation: successPop 900ms ease-out 1, corePulse 2.8s ease-in-out infinite 900ms;
+
+    .plate {
+      fill: url(#plateGradient);
+      stroke: var(--plate-edge);
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.28));
     }
-    #pet.scene-success .ring1,
-    #pet.scene-success .ring2 { stroke: var(--ring3-color); stroke-width: 5; }
-    #pet.scene-success #mouth-open {
-      animation: happyMouth 2s ease-out 1;
-      transform-origin: 50% 62%;
+
+    .dark-plate {
+      fill: #080714;
+      stroke: #2e1748;
+      stroke-width: 2;
+      stroke-linejoin: round;
     }
-    #pet.success-flash {
-      animation: successBounce 2s ease-out 1, successFlash 1s ease-out 1;
+
+    .neon-line {
+      fill: none;
+      stroke: var(--ring3-color);
+      stroke-width: 2;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 6px var(--ring3-color));
     }
-    #pet.scene-error .ring1,
-    #pet.scene-error .ring2 { stroke-dasharray: 10 10; }
-    #pet.error-shake {
-      animation: alertShake 650ms ease-in-out 1;
+
+    .horn-main {
+      fill: url(#hornGradient);
+      stroke: #2f1644;
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.65));
     }
-    #pet.event-pulse .core {
-      filter: drop-shadow(0 0 24px var(--ring3-color));
+
+    .horn-edge {
+      fill: none;
+      stroke: var(--ring3-color);
+      stroke-width: 2;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 7px var(--ring3-color));
     }
+
+    .visor-shell {
+      fill: #03030a;
+      stroke: #402060;
+      stroke-width: 3.5;
+      filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.7)) drop-shadow(0 0 18px rgba(126, 34, 206, 0.42));
+    }
+
+    .visor-glass {
+      fill: rgba(0, 0, 0, 0.92);
+      stroke: rgba(236, 72, 153, 0.5);
+      stroke-width: 1.4;
+    }
+
+    .visor-reflection {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.12);
+      stroke-width: 1.2;
+      stroke-linecap: round;
+    }
+
+    .eyes-open {
+      filter: drop-shadow(0 0 7px var(--ring3-color));
+      transform-origin: 110px 103px;
+      animation: blinkEyes 4.6s ease-in-out infinite;
+    }
+
+    .eye-shape { fill: var(--ring3-color); }
+
+    .eyes-closed path {
+      stroke: var(--ring3-color);
+      stroke-width: 3;
+      stroke-linecap: round;
+      fill: none;
+      filter: drop-shadow(0 0 7px var(--ring3-color));
+    }
+
+    #mouth-open, #mouth-closed {
+      fill: none;
+      stroke: var(--ring3-color);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 6px var(--ring3-color));
+    }
+
+    #mouth-open { stroke-width: 3; }
+    #mouth-closed { stroke-width: 2.6; }
+
+    .core {
+      fill: var(--core-fill);
+      stroke: var(--core-stroke);
+      stroke-width: 2.5;
+      filter: drop-shadow(0 0 9px var(--core-stroke));
+      animation: corePulse 2.6s ease-in-out infinite;
+    }
+
+    .goat-emblem {
+      fill: none;
+      stroke: var(--ring3-color);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 6px var(--ring3-color));
+    }
+
+    .joint {
+      fill: #130b21;
+      stroke: #4b2368;
+      stroke-width: 1.8;
+    }
+
+    .claw, .hoof {
+      fill: #05040b;
+      stroke: var(--ring3-color);
+      stroke-width: 1.7;
+      filter: drop-shadow(0 0 5px var(--ring3-color));
+    }
+
+    .tail-line {
+      fill: none;
+      stroke: #1d102d;
+      stroke-width: 3.2;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.42));
+    }
+
+    .tail-tip {
+      fill: var(--ring3-color);
+      filter: drop-shadow(0 0 9px var(--ring3-color));
+    }
+
+    #pet-shadow {
+      fill: rgba(236, 72, 153, 0.22);
+      filter: blur(2px) drop-shadow(0 0 10px rgba(236, 72, 153, 0.35));
+      transform-origin: 110px 184px;
+      transition: opacity .16s ease, transform .16s ease;
+    }
+
+    #goatky-character { transform-origin: 110px 118px; }
+    #left-leg, #right-leg, #left-arm, #right-arm { transform-box: fill-box; }
+    #left-leg { transform-origin: 50% 12%; }
+    #right-leg { transform-origin: 50% 12%; }
+    #left-arm { transform-origin: 80% 10%; }
+    #right-arm { transform-origin: 20% 10%; }
+    #goat-tail { transform-origin: 90px 148px; }
+
+    #thruster-flame {
+      opacity: 0;
+      transform-origin: 110px 168px;
+      fill: url(#flameGradient);
+      filter: drop-shadow(0 0 10px var(--ring3-color));
+      transition: opacity .16s ease;
+    }
+
+    #pet.physics-idle_grounded #goatky-character { animation: groundedBreath 3.3s ease-in-out infinite; }
+    #pet.physics-grounded_walk #goatky-character { animation: walkBody 0.44s ease-in-out infinite alternate; }
+    #pet.physics-grounded_walk #left-leg { animation: leftWalk 0.36s ease-in-out infinite alternate; }
+    #pet.physics-grounded_walk #right-leg { animation: rightWalk 0.36s ease-in-out infinite alternate; }
+    #pet.physics-grounded_walk #left-arm { animation: rightWalk 0.44s ease-in-out infinite alternate; }
+    #pet.physics-grounded_walk #right-arm { animation: leftWalk 0.44s ease-in-out infinite alternate; }
+    #pet.physics-hop #goatky-character { animation: hopSquash .46s ease-in-out infinite alternate; }
+    #pet.physics-hop #pet-shadow { opacity: .14; transform: scaleX(.78); }
+    #pet.physics-fly #goatky-character, #pet.physics-dash #goatky-character { animation: hoverGoat 1.05s ease-in-out infinite alternate; }
+    #pet.physics-fly #thruster-flame, #pet.physics-dash #thruster-flame { opacity: 1; animation: thrusterFlicker .09s ease-in-out infinite alternate; }
+    #pet.physics-fly #pet-shadow, #pet.physics-dash #pet-shadow { opacity: .08; transform: scaleX(.55); }
+    #pet.physics-fly #goat-tail, #pet.physics-dash #goat-tail { animation: tailWhip .9s ease-in-out infinite alternate; }
+    #pet.dashing { filter: brightness(1.18) drop-shadow(0 0 20px var(--ring3-color)) drop-shadow(0 0 38px rgba(168, 85, 247, .68)) !important; }
+    #pet.bounce, #pet.celebrate { animation: spinOnce .9s ease-in-out 1; }
+    #pet.glow-bright .core { animation: coreFlash 1.05s ease-in-out infinite; }
+    #pet.portal-entering { animation: portalIn .48s cubic-bezier(.55,.055,.675,.19) 1 forwards; }
+    #pet.portal-exiting { animation: portalOut .58s cubic-bezier(.215,.61,.355,1) 1 forwards; }
+    #pet.scene-thinking #goatky-character, #pet.scene-executing #goatky-character { animation: cyberGlitch 2.4s steps(1) infinite; }
+    #pet.scene-thinking .eye-shape, #pet.scene-error .eye-shape { fill: #ff1f8f; }
+    #pet.scene-success .eye-shape { fill: #34d399; }
+    #pet.scene-executing .hud-ring-mid, #pet.scene-executing .hud-ring-outer, #pet.scene-executing .hud-ring-inner { opacity: 1; stroke-width: 4; animation-duration: 1.1s; }
+    #pet.scene-error { animation: alertShake .55s ease-in-out 1; }
 
     #mood {
       position: absolute;
       left: 50%;
-      bottom: 10px;
+      bottom: 6px;
       transform: translateX(-50%);
-      color: rgba(239, 68, 68, 0.85);
-      font-size: 10px;
-      font-weight: bold;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+      color: #ff2e96;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 3.2px;
+      text-shadow: 0 0 7px rgba(236, 72, 153, .96), 0 0 18px rgba(126, 34, 206, .76);
       pointer-events: none;
+      z-index: 6;
     }
 
-    /* Ground Shadow styling */
-    #pet-shadow {
-      opacity: 0;
-      transform-origin: 110px 177px;
-      transform: scale(0);
-      transition: opacity 0.35s ease, transform 0.35s ease;
-    }
-    
-    #pet.physics-grounded_walk #pet-shadow,
-    #pet.physics-idle_grounded #pet-shadow {
-      opacity: 0.65;
-      transform: scale(1);
-    }
-    
-    #pet.physics-hop #pet-shadow {
-      opacity: 0.35;
-      transform: scale(0.65);
-    }
-    
-    #pet.physics-fly #pet-shadow {
-      opacity: 0.18;
-      transform: scale(0.45);
+    #mood::before, #mood::after {
+      content: "";
+      display: inline-block;
+      width: 22px;
+      height: 1px;
+      background: #ec4899;
+      margin: 0 7px 3px;
+      box-shadow: 0 0 8px #ec4899;
+      opacity: .62;
     }
 
-    /* Behavioral Physics Animations */
-    #pet.physics-grounded_walk #left-leg {
-      animation: walkLegLeft 0.28s ease-in-out infinite alternate;
-    }
-    #pet.physics-grounded_walk #right-leg {
-      animation: walkLegRight 0.28s ease-in-out infinite alternate;
-    }
-    #pet.physics-grounded_walk #goatky-character {
-      animation: walkSway 0.28s ease-in-out infinite alternate;
-      transform-origin: 50% 175px;
-    }
-
-    #pet.physics-hop #goatky-character {
-      animation: hopSquash 0.45s ease-in-out infinite alternate;
-      transform-origin: 50% 175px;
-    }
-
-    #pet.physics-fly #thruster-flame,
-    #pet.physics-dash #thruster-flame {
-      opacity: 1 !important;
-      animation: thrusterFlicker 0.08s infinite alternate;
-    }
-    #pet.physics-fly #left-leg {
-      animation: legsFloat 1.2s ease-in-out infinite alternate;
-    }
-    #pet.physics-fly #right-leg {
-      animation: legsFloat 1.2s ease-in-out infinite alternate-reverse;
-    }
-    #pet.physics-fly #goatky-character {
-      animation: flySway 2.5s ease-in-out infinite;
-      transform-origin: 50% 110px;
-    }
-
-    #pet.physics-idle_grounded #goatky-character {
-      animation: gentleBreathing 3.0s ease-in-out infinite;
-      transform-origin: 50% 160px;
-    }
-
-    /* Keyframes for animations */
-    @keyframes walkLegLeft {
-      0% { transform: rotate(-22deg); }
-      100% { transform: rotate(22deg); }
-    }
-    @keyframes walkLegRight {
-      0% { transform: rotate(22deg); }
-      100% { transform: rotate(-22deg); }
-    }
-
-    @keyframes walkSway {
-      0% { transform: rotate(-2.5deg) translateY(-1px); }
-      100% { transform: rotate(2.5deg) translateY(1px); }
-    }
-
-    @keyframes hopSquash {
-      0% { transform: scale(1.02, 0.98) translateY(0); }
-      30% { transform: scale(1.12, 0.8) translateY(2px); }
-      100% { transform: scale(0.9, 1.15) translateY(-8px); }
-    }
-
-    @keyframes legsFloat {
-      0% { transform: rotate(-8deg) translateY(2px); }
-      100% { transform: rotate(8deg) translateY(-2px); }
-    }
-
-    @keyframes thrusterFlicker {
-      0% { transform: scaleY(0.7) skewX(-2deg); opacity: 0.6; }
-      100% { transform: scaleY(1.3) skewX(2deg); opacity: 1; }
-    }
-
-    @keyframes gentleBreathing {
-      0%, 100% { transform: scale(1.0); }
-      50% { transform: scale(1.02, 0.96); }
-    }
-
-    @keyframes flySway {
-      0%, 100% { transform: translateY(0) rotate(-1.5deg); }
-      50% { transform: translateY(-7px) rotate(1.5deg); }
-    }
-
-    @keyframes cyberGlitch {
-      0%, 100% { transform: translate(0); }
-      92% { transform: translate(-1.5px, 0.8px); filter: hue-rotate(8deg); }
-      94% { transform: translate(1.5px, -0.8px); filter: hue-rotate(-8deg); }
-      96% { transform: translate(-0.8px, -1.2px); }
-    }
-
-    #pet.scene-thinking #goatky-character,
-    #pet.scene-executing #goatky-character {
-      animation: cyberGlitch 3s infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes spinReverse {
-      from { transform: rotate(360deg); }
-      to { transform: rotate(0deg); }
-    }
-
-    @keyframes orbitFast {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes orbitReverseFast {
-      from { transform: rotate(360deg); }
-      to { transform: rotate(0deg); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: .45; transform: scale(.96); }
-      50% { opacity: 1; transform: scale(1.05); }
-    }
-
-    @keyframes corePulse {
-      0%, 100% { filter: drop-shadow(0 0 4px var(--core-stroke)); }
-      50% { filter: drop-shadow(0 0 12px var(--ring3-color)); }
-    }
-
-    @keyframes spinOnce {
-      from { transform: rotate(0deg) scale(1); }
-      to { transform: rotate(360deg) scale(1.03); }
-    }
-
-    @keyframes coreGlowFlash {
-      0%, 100% { filter: drop-shadow(0 0 18px var(--glow-color)); }
-      50% { filter: drop-shadow(0 0 35px var(--ring3-color)); }
-    }
-
-    @keyframes idleBreath {
-      0%, 100% { filter: drop-shadow(0 0 12px var(--glow-color)); transform: scale(1); }
-      50% { filter: drop-shadow(0 0 18px rgba(239, 68, 68, .45)); transform: scale(1.015); }
-    }
-
-    @keyframes executePulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.085); }
-    }
-
-    @keyframes blinkSoft {
-      0%, 88%, 100% { transform: scaleY(1); opacity: 1; }
-      92%, 96% { transform: scaleY(.12); opacity: .65; }
-    }
-
-    @keyframes successPop {
-      0% { transform: scale(.86); }
-      45% { transform: scale(1.24); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes successBounce {
-      0% { transform: translateY(0) scale(1); }
-      18% { transform: translateY(-16px) scale(1.18); }
-      38% { transform: translateY(3px) scale(1.06); }
-      100% { transform: translateY(0) scale(1); }
-    }
-
-    @keyframes successFlash {
-      0% { filter: drop-shadow(0 0 18px var(--ring3-color)) brightness(1); }
-      35% { filter: drop-shadow(0 0 58px #22c55e) drop-shadow(0 0 38px var(--ring3-color)) brightness(1.65); }
-      100% { filter: drop-shadow(0 0 24px var(--ring3-color)) brightness(1); }
-    }
-
-    @keyframes happyMouth {
-      0%, 100% { transform: scale(1); stroke-width: 5; }
-      35% { transform: scale(1.28); stroke-width: 7; }
-    }
-
-    @keyframes alertShake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-2px); }
-      75% { transform: translateX(2px); }
-    }
-
-    @keyframes particleDrift {
-      from { transform: translate(-2px, -1px); opacity: .25; }
-      to { transform: translate(2px, 1px); opacity: .75; }
-    }
-
-    @keyframes particleOrbit {
-      0% { transform: rotate(0deg) translateX(0); opacity: .35; }
-      35% { opacity: 1; }
-      100% { transform: rotate(360deg) translateX(0); opacity: .85; }
-    }
-
-    #close-pet {
+    #close-pet, #settings-pet {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 24px;
-      height: 24px;
-      background: rgba(220, 38, 38, 0.6);
-      color: white;
-      border: 1px solid rgba(248, 113, 113, 0.8);
+      top: 12px;
+      width: 23px;
+      height: 23px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      font-weight: bold;
+      color: #fce7f3;
       cursor: pointer;
       opacity: 0;
-      transition: opacity 0.3s ease;
-      -webkit-app-region: no-drag;
+      transition: opacity .2s ease, transform .2s ease;
       z-index: 10;
-    }
-
-    #wrap:hover #close-pet {
-      opacity: 1;
-    }
-    
-    #close-pet:hover {
-      background: rgba(220, 38, 38, 0.9);
-    }
-
-    #settings-pet {
-      position: absolute;
-      top: 10px;
-      right: 44px;
-      width: 24px;
-      height: 24px;
-      background: rgba(71, 85, 105, 0.6);
-      color: white;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.3s ease;
       -webkit-app-region: no-drag;
-      z-index: 10;
+      font-size: 13px;
+      font-weight: 900;
+      backdrop-filter: blur(6px);
     }
 
-    #wrap:hover #settings-pet {
-      opacity: 1;
-    }
-
-    #settings-pet:hover {
-      background: rgba(71, 85, 105, 0.9);
-    }
+    #close-pet { right: 10px; background: rgba(127, 29, 29, .78); border: 1px solid rgba(248, 113, 113, .9); box-shadow: 0 0 12px rgba(239, 68, 68, .48); }
+    #settings-pet { right: 40px; background: rgba(49, 18, 82, .76); border: 1px solid rgba(236, 72, 153, .76); box-shadow: 0 0 12px rgba(236, 72, 153, .42); }
+    #wrap:hover #close-pet, #wrap:hover #settings-pet { opacity: 1; }
+    #close-pet:hover, #settings-pet:hover { transform: scale(1.1); }
 
     #status-badge {
       position: absolute;
-      top: 32px;
-      right: 32px;
-      width: 34px;
-      height: 34px;
+      top: 35px;
+      right: 31px;
+      width: 31px;
+      height: 31px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: system-ui, sans-serif;
-      font-size: 19px;
-      font-weight: 900;
+      font-size: 18px;
+      font-weight: 1000;
       color: white;
-      z-index: 10;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+      z-index: 11;
       pointer-events: none;
       opacity: 0;
       transform: scale(0);
+      transition: all .22s cubic-bezier(.175,.885,.32,1.275);
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      border: 2px solid #f0abfc;
+      box-shadow: 0 0 16px rgba(236, 72, 153, .9);
     }
 
-    #status-badge.thinking {
-      background: linear-gradient(135deg, #7c3aed, #dc2626);
-      border: 2px solid var(--ring3-color);
-      filter: drop-shadow(0 0 10px var(--ring3-color));
-      animation: badgePulse 1.5s ease-in-out infinite;
-      opacity: 1;
-      transform: scale(1);
-    }
+    #status-badge.thinking, #status-badge.response-ready { opacity: 1; transform: scale(1); animation: badgePulse 1.1s ease-in-out infinite; }
+    #status-badge.response-ready { background: linear-gradient(135deg, #10b981, #ec4899); }
+    #status-badge.hidden { opacity: 0; transform: scale(0); }
 
-    #status-badge.response-ready {
-      background: linear-gradient(135deg, #10b981, #059669);
-      border: 2px solid #34d399;
-      filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.95));
-      animation: badgeBounce 0.6s ease-in-out infinite alternate;
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    #status-badge.hidden {
-      opacity: 0;
-      transform: scale(0);
-    }
-
-    @keyframes badgePulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.18); }
-    }
-
-    @keyframes badgeBounce {
-      0% { transform: translateY(0) scale(1); }
-      100% { transform: translateY(-10px) scale(1.15); }
-    }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spinReverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    @keyframes sparkBlink { 0%,100% { opacity:.22; transform: scale(.8); } 50% { opacity:1; transform: scale(1.2); } }
+    @keyframes corePulse { 0%,100% { filter: drop-shadow(0 0 7px var(--core-stroke)); } 50% { filter: drop-shadow(0 0 20px var(--ring3-color)); } }
+    @keyframes coreFlash { 0%,100% { filter: drop-shadow(0 0 10px #ec4899); } 50% { filter: drop-shadow(0 0 28px #ff1f8f); } }
+    @keyframes blinkEyes { 0%,90%,100% { transform: scaleY(1); } 94% { transform: scaleY(.18); } }
+    @keyframes groundedBreath { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(1px) scale(1.015,.985); } }
+    @keyframes walkBody { 0% { transform: translateY(0) rotate(-1.5deg); } 100% { transform: translateY(-2px) rotate(1.5deg); } }
+    @keyframes leftWalk { from { transform: rotate(-18deg) translateY(1px); } to { transform: rotate(20deg) translateY(-1px); } }
+    @keyframes rightWalk { from { transform: rotate(20deg) translateY(-1px); } to { transform: rotate(-18deg) translateY(1px); } }
+    @keyframes hopSquash { 0% { transform: scale(1.08,.86) translateY(2px); } 100% { transform: scale(.94,1.18) translateY(-5px); } }
+    @keyframes hoverGoat { from { transform: translateY(-3px) rotate(-1deg); } to { transform: translateY(3px) rotate(1deg); } }
+    @keyframes thrusterFlicker { from { transform: scaleY(.65); opacity:.6; } to { transform: scaleY(1.5); opacity:1; } }
+    @keyframes tailWhip { from { transform: rotate(-5deg); } to { transform: rotate(8deg); } }
+    @keyframes spinOnce { from { transform: rotate(0deg) scale(1); } to { transform: rotate(360deg) scale(1.04); } }
+    @keyframes portalIn { from { transform: scale(1) rotate(0deg); opacity:1; } to { transform: scale(.02) rotate(360deg); opacity:0; } }
+    @keyframes portalOut { from { transform: scale(.02) rotate(-360deg); opacity:0; } to { transform: scale(1) rotate(0deg); opacity:1; } }
+    @keyframes alertShake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-3px); } 40% { transform: translateX(3px); } 60% { transform: translateX(-2px); } 80% { transform: translateX(2px); } }
+    @keyframes badgePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.17); } }
+    @keyframes cyberGlitch { 0%,91%,100% { transform: translate(0); } 92% { transform: translate(-1px,1px); } 94% { transform: translate(1px,-1px); } 96% { transform: translate(-.5px,-.5px); } }
   </style>
 </head>
 <body>
@@ -596,106 +411,110 @@
       <div id="close-pet" title="Cerrar Goatky">×</div>
       <div id="settings-pet" title="Ajustes">⚙</div>
       <div id="status-badge" class="hidden">?</div>
-      <div id="bubble">Sistemas listos. Auditoría en línea 👾</div>
+      <div id="bubble">Tócame para hablar</div>
       <canvas id="canvas-fx"></canvas>
       <div id="pet-float-container">
-        <div id="pet">
-          <svg viewBox="0 0 220 220">
-            <!-- HUD Reticle / Orbit Rings -->
-            <circle class="radar-orbit" cx="110" cy="110" r="101"/>
-            <path class="radar-sweep" d="M110 110 L110 8 A102 102 0 0 1 198 59 Z"/>
-            <line class="sweep-line" x1="110" y1="110" x2="110" y2="5"/>
-            <circle class="particle" cx="52" cy="78" r="3.4"/>
-            <circle class="particle" cx="176" cy="96" r="3" style="animation-delay: .35s"/>
-            <circle class="particle" cx="75" cy="172" r="2.8" style="animation-delay: .7s"/>
-            <circle class="particle" cx="156" cy="168" r="2.6" style="animation-delay: 1.05s"/>
-            <circle class="ring1" cx="110" cy="110" r="82" fill="none" stroke-width="3" stroke-dasharray="32 18" opacity=".75"/>
-            <circle class="ring2" cx="110" cy="110" r="62" fill="none" stroke-width="3" stroke-dasharray="18 12" opacity=".95"/>
-            <circle class="ring3" cx="110" cy="110" r="94" fill="none" stroke-width="1.5" stroke-dasharray="4 18" opacity=".55"/>
-            
-            <!-- Ground Contact Shadow -->
-            <ellipse id="pet-shadow" cx="110" cy="177" rx="32" ry="4" fill="rgba(0,0,0,0.55)" filter="blur(2px)" />
+        <div id="pet" class="physics-idle_grounded">
+          <svg viewBox="0 0 220 220" aria-label="Goatky neon goat robot mascot">
+            <defs>
+              <linearGradient id="plateGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1d1630"/>
+                <stop offset="48%" stop-color="#090713"/>
+                <stop offset="100%" stop-color="#2b123f"/>
+              </linearGradient>
+              <linearGradient id="hornGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0b0713"/>
+                <stop offset="54%" stop-color="#181026"/>
+                <stop offset="100%" stop-color="#4c1d95"/>
+              </linearGradient>
+              <linearGradient id="flameGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fdf4ff"/>
+                <stop offset="42%" stop-color="#ec4899"/>
+                <stop offset="100%" stop-color="#7e22ce"/>
+              </linearGradient>
+            </defs>
 
-            <!-- GOATKY CHARACTER GROUP -->
+            <ellipse id="pet-shadow" cx="110" cy="184" rx="42" ry="7"/>
+            <circle class="hud-ring-outer" cx="110" cy="105" r="100"/>
+            <circle class="hud-ring-mid" cx="110" cy="105" r="82"/>
+            <circle class="hud-ring-inner" cx="110" cy="105" r="62"/>
+            <rect class="spark" x="108" y="8" width="5" height="13" rx="2"/>
+            <rect class="spark" x="187" y="88" width="5" height="13" rx="2" transform="rotate(80 189 94)"/>
+            <rect class="spark" x="28" y="88" width="5" height="13" rx="2" transform="rotate(-80 30 94)"/>
+            <rect class="spark" x="55" y="23" width="4" height="11" rx="2" transform="rotate(-34 57 28)"/>
+            <rect class="spark" x="161" y="23" width="4" height="11" rx="2" transform="rotate(34 163 28)"/>
+
             <g id="goatky-character">
-              <!-- Demonic tail (longer, curvier, thin cable ending in glowing arrow) -->
-              <path d="M 86,150 Q 64,152 68,168 T 52,185" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round" />
-              <polygon points="52,180 43,188 54,192 52,185" fill="var(--ring3-color)" filter="drop-shadow(0 0 4.5px var(--ring3-color))" />
-
-              <!-- Cyber Neck joint -->
-              <polygon class="droid-joints" points="103,130 117,130 114,138 106,138" />
-              
-              <!-- Robot Chest/Body -->
-              <path class="droid-body" d="M 86,136 C 86,136 78,162 110,165 C 142,162 134,136 134,136 Z" />
-              
-              <!-- Cybernetic Power Core -->
-              <circle class="core" cx="119" cy="147" r="7.5" stroke-width="2.5" />
-
-              <!-- Chest Prompt Terminal decals -->
-              <path d="M 93,144 L 97,147 L 93,150" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" />
-              <line x1="99" y1="150" x2="105" y2="150" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" />
-
-              <!-- Legs / Robot Hooves with transform origins -->
-              <!-- Left Leg -->
-              <g id="left-leg" style="transform-origin: 96px 158px;">
-                <line x1="96" y1="158" x2="93" y2="168" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" />
-                <!-- Left hoof (casco) -->
-                <polygon points="87,168 99,168 96,175 90,175" fill="#334155" stroke="#1e293b" stroke-width="1" />
-              </g>
-              <!-- Right Leg -->
-              <g id="right-leg" style="transform-origin: 124px 158px;">
-                <line x1="124" y1="158" x2="127" y2="168" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" />
-                <!-- Right hoof (casco) -->
-                <polygon points="121,168 133,168 130,175 124,175" fill="#334155" stroke="#1e293b" stroke-width="1" />
+              <g id="goat-tail">
+                <path class="tail-line" d="M 85 151 C 62 151, 58 170, 69 176 C 78 181, 87 171, 76 165"/>
+                <polygon class="tail-tip" points="63,173 49,180 62,187 66,179"/>
               </g>
 
-              <!-- Flame / Thruster light (visible under flight/dash mode) -->
-              <polygon id="thruster-flame" points="106,165 114,165 110,174" fill="var(--ring3-color)" opacity="0" filter="drop-shadow(0 0 5px var(--ring3-color))" style="transform-origin: 110px 165px;" />
+              <path class="horn-main" d="M 86 68 C 69 31, 46 22, 31 34 C 52 43, 66 57, 80 81 Z"/>
+              <path class="horn-edge" d="M 79 68 C 64 39, 47 30, 34 35"/>
+              <path class="horn-edge" d="M 69 56 L 55 50" opacity=".75"/>
+              <path class="horn-edge" d="M 59 45 L 47 40" opacity=".55"/>
 
-              <!-- Demonic Cyber Horns (dark demonic, curves up and back, backlit) -->
-              <!-- Left Horn -->
-              <path d="M 82,72 C 60,40 65,15 80,8 C 72,25 74,48 94,72 Z" fill="#1e1b4b" stroke="var(--ring3-color)" stroke-width="1.8" filter="drop-shadow(0 0 3px var(--glow-color))" />
-              <path d="M 80,60 C 68,38 72,22 80,12" fill="none" stroke="var(--ring3-color)" stroke-width="1.5" stroke-linecap="round" />
-              
-              <!-- Right Horn -->
-              <path d="M 138,72 C 160,40 155,15 140,8 C 148,25 146,48 126,72 Z" fill="#1e1b4b" stroke="var(--ring3-color)" stroke-width="1.8" filter="drop-shadow(0 0 3px var(--glow-color))" />
-              <path d="M 140,60 C 152,38 148,22 140,12" fill="none" stroke="var(--ring3-color)" stroke-width="1.5" stroke-linecap="round" />
-              
-              <!-- Side cyber-ports (reduced antennas, removes Pikachu ears) -->
-              <!-- Left side port -->
-              <rect class="droid-joints" x="65" y="98" width="4" height="8" rx="1.2" ry="1.2" />
-              <!-- Right side port -->
-              <rect class="droid-joints" x="151" y="98" width="4" height="8" rx="1.2" ry="1.2" />
-              
-              <!-- Head Plate (octagon/cyber-trapezoid, less round) -->
-              <path class="droid-body" d="M 80,72 L 140,72 L 152,90 L 152,116 L 140,128 L 80,128 L 68,116 L 68,90 Z" />
-              
-              <!-- Aggressive Visor (sharp angled hexagon) -->
-              <path class="droid-visor" d="M 82,86 L 138,86 L 144,100 L 138,114 L 82,114 L 76,100 Z" />
-              <path class="droid-visor-reflection" d="M 85,92 A 8,8 0 0,1 135,92" />
-              
-              <!-- Segmented LED open eyes (angled cyber slits pointing down-inward) -->
+              <path class="horn-main" d="M 134 68 C 151 31, 174 22, 189 34 C 168 43, 154 57, 140 81 Z"/>
+              <path class="horn-edge" d="M 141 68 C 156 39, 173 30, 186 35"/>
+              <path class="horn-edge" d="M 151 56 L 165 50" opacity=".75"/>
+              <path class="horn-edge" d="M 161 45 L 173 40" opacity=".55"/>
+
+              <path class="dark-plate" d="M 70 91 L 43 83 L 57 105 L 76 103 Z"/>
+              <path class="neon-line" d="M 50 87 L 66 97" opacity=".7"/>
+              <path class="dark-plate" d="M 150 91 L 177 83 L 163 105 L 144 103 Z"/>
+              <path class="neon-line" d="M 170 87 L 154 97" opacity=".7"/>
+
+              <path class="plate" d="M 78 73 L 142 73 L 154 88 L 149 121 L 134 136 L 86 136 L 71 121 L 66 88 Z"/>
+              <path class="visor-shell" d="M 77 87 L 143 87 L 148 96 L 144 118 L 132 126 L 88 126 L 76 118 L 72 96 Z"/>
+              <path class="visor-glass" d="M 82 91 L 138 91 L 142 98 L 139 114 L 128 121 L 92 121 L 81 114 L 78 98 Z"/>
+              <path class="visor-reflection" d="M 88 96 C 103 91, 119 91, 134 96"/>
+              <path class="neon-line" d="M 102 82 L 110 89 L 118 82" opacity=".78"/>
+
               <g class="eyes-open">
-                <polygon points="90,95 99,93 96,106 87,103" fill="var(--ring3-color)" filter="drop-shadow(0 0 4.5px var(--ring3-color))" />
-                <polygon points="130,95 121,93 124,106 133,103" fill="var(--ring3-color)" filter="drop-shadow(0 0 4.5px var(--ring3-color))" />
+                <polygon class="eye-shape" points="91,102 106,106 101,113 88,109"/>
+                <polygon class="eye-shape" points="129,102 114,106 119,113 132,109"/>
               </g>
-              
-              <!-- Segmented LED closed eyes -->
-              <g class="eyes-closed" style="display: none;">
-                <line x1="88" y1="101" x2="98" y2="101" stroke="var(--ring3-color)" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 0 4.5px var(--ring3-color))" />
-                <line x1="122" y1="101" x2="132" y2="101" stroke="var(--ring3-color)" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 0 4.5px var(--ring3-color))" />
+              <g class="eyes-closed" style="display:none;">
+                <path d="M 90 107 L 104 108"/>
+                <path d="M 116 108 L 130 107"/>
               </g>
-              
-              <!-- Devious cybernetic smirking mouth displays -->
-              <!-- Mischievous wider cyber-smirk -->
-              <path id="mouth-open" d="M 98,107 Q 108,116 122,107 Q 112,111 98,107" fill="var(--ring3-color)" stroke="var(--ring3-color)" stroke-width="1" stroke-linejoin="round" filter="drop-shadow(0 0 3.5px var(--ring3-color))" />
-              <!-- Flat mouth closed -->
-              <path id="mouth-closed" d="M 102,110 L 118,110" fill="none" stroke="var(--ring3-color)" stroke-width="2" stroke-linecap="round" style="display: none;" filter="drop-shadow(0 0 3px var(--ring3-color))" />
+
+              <path id="mouth-open" d="M 96 116 L 102 121 L 107 116 L 112 122 L 118 116 L 124 120"/>
+              <path id="mouth-closed" d="M 100 118 L 120 118" style="display:none;"/>
+
+              <path class="joint" d="M 101 135 L 119 135 L 116 143 L 104 143 Z"/>
+              <path class="plate" d="M 82 142 L 138 142 L 130 171 L 110 178 L 90 171 Z"/>
+              <circle class="core" cx="110" cy="155" r="13"/>
+              <path class="goat-emblem" d="M 102 157 C 101 149, 107 149, 110 155 C 113 149, 119 149, 118 157"/>
+              <path class="goat-emblem" d="M 106 160 L 110 165 L 114 160"/>
+              <path class="goat-emblem" d="M 103 153 C 99 149, 98 145, 100 142" opacity=".7"/>
+              <path class="goat-emblem" d="M 117 153 C 121 149, 122 145, 120 142" opacity=".7"/>
+
+              <g id="left-arm">
+                <path class="joint" d="M 83 145 L 69 154 L 73 163 L 88 154 Z"/>
+                <path class="claw" d="M 66 161 L 57 168 L 68 169 Z"/>
+              </g>
+              <g id="right-arm">
+                <path class="joint" d="M 137 145 L 151 154 L 147 163 L 132 154 Z"/>
+                <path class="claw" d="M 154 161 L 163 168 L 152 169 Z"/>
+              </g>
+
+              <g id="left-leg">
+                <path class="joint" d="M 94 169 L 86 183 L 96 186 L 104 173 Z"/>
+                <path class="hoof" d="M 82 185 L 98 185 L 92 194 Z"/>
+              </g>
+              <g id="right-leg">
+                <path class="joint" d="M 126 169 L 134 183 L 124 186 L 116 173 Z"/>
+                <path class="hoof" d="M 122 185 L 138 185 L 128 194 Z"/>
+              </g>
+
+              <polygon id="thruster-flame" points="102,174 118,174 110,201"/>
             </g>
           </svg>
         </div>
-      </div> 
-      <div id="mood">LIVE</div>
+      </div>
+      <div id="mood">ACTIVA</div>
     </div>
   </div>
 
@@ -703,64 +522,39 @@
     const pet = document.getElementById("pet");
     const bubble = document.getElementById("bubble");
     const mood = document.getElementById("mood");
+    const canvas = document.getElementById("canvas-fx");
+    const ctx = canvas.getContext("2d");
 
     let latestState = null;
     let lastSeenEventId = null;
     let lastOperationalEventId = null;
     let currentOperationalState = "idle";
     let lastSceneState = "idle";
-    let lokkyBaseUrl = "http://127.0.0.1:9119";
-    
     let isSleeping = false;
     let isCelebrating = false;
     let isGlowing = false;
     let isOffline = false;
-    let chatterMode = "normal";
     let customStateActive = false;
-
+    let chatterMode = "normal";
     let currentVx = 0;
     let currentVy = 0;
-    let currentBehaviorState = "idle_grounded";
-    let currentTilt = 0;
     let currentFlip = 1;
+    let currentTilt = 0;
+    let portalState = "inactive";
+    let portalTime = 0;
+    let lastFrameTime = performance.now();
 
-    document.getElementById("close-pet").addEventListener("click", (e) => {
-      e.stopPropagation();
-      window.electronAPI?.closeApp?.();
-    });
-
-    document.getElementById("settings-pet").addEventListener("click", (e) => {
-      e.stopPropagation();
-      window.electronAPI?.openSettings?.();
-    });
-
-    pet.addEventListener("click", () => {
-      window.electronAPI?.userActivity?.();
-      window.electronAPI?.openChat?.();
-      bubble.textContent = "Abriendo consola de chat...";
-      mood.textContent = "SHELL";
-      setTimeout(() => {
-        bubble.textContent = "Tócame para hablar 👾";
-        if (latestState) {
-          if (!applyOperationalScene(latestState.operational_scene)) {
-            applyVisualState(latestState);
-          }
-        } else {
-          mood.textContent = "LIVE";
-        }
-      }, 2500);
-    });
-
-    function setOperationalPalette(state) {
-      const root = document.documentElement;
+    function setPalette(state) {
       const palettes = {
-        idle: ["rgba(147, 51, 234, 0.8)", "#7e22ce", "#a855f7", "#ec4899", "#d946ef", "rgba(76, 29, 149, 0.35)", "#fdf4ff"],
-        thinking: ["rgba(239, 68, 68, 0.9)", "#b91c1c", "#ef4444", "#fca5a5", "#ef4444", "rgba(127, 29, 29, 0.48)", "#fee2e2"],
-        executing: ["rgba(34, 211, 238, 1)", "#06b6d4", "#22d3ee", "#a78bfa", "#67e8f9", "rgba(22, 78, 99, 0.72)", "#ecfeff"],
-        success: ["rgba(74, 222, 128, 0.95)", "#16a34a", "#4ade80", "#86efac", "#22c55e", "rgba(21, 128, 61, 0.48)", "#dcfce7"],
-        error: ["rgba(239, 68, 68, 0.9)", "#dc2626", "#f87171", "#fca5a5", "#ef4444", "rgba(127, 29, 29, 0.5)", "#fecaca"],
+        idle: ["rgba(236,72,153,.92)", "#7e22ce", "#a855f7", "#ec4899", "#ec4899", "rgba(88,28,135,.42)", "#fdf4ff"],
+        thinking: ["rgba(255,31,143,.96)", "#be123c", "#e11d48", "#ff1f8f", "#ff1f8f", "rgba(127,29,29,.44)", "#ffe4f1"],
+        executing: ["rgba(168,85,247,1)", "#6d28d9", "#9333ea", "#ec4899", "#d946ef", "rgba(88,28,135,.52)", "#fdf4ff"],
+        success: ["rgba(52,211,153,.95)", "#059669", "#10b981", "#34d399", "#34d399", "rgba(6,95,70,.42)", "#dcfce7"],
+        error: ["rgba(248,113,113,.98)", "#991b1b", "#dc2626", "#fb7185", "#ef4444", "rgba(127,29,29,.52)", "#fee2e2"],
+        sleep: ["rgba(71,85,105,.34)", "#1e293b", "#334155", "#64748b", "#475569", "rgba(15,23,42,.62)", "#94a3b8"]
       };
       const p = palettes[state] || palettes.idle;
+      const root = document.documentElement;
       root.style.setProperty("--glow-color", p[0]);
       root.style.setProperty("--ring1-color", p[1]);
       root.style.setProperty("--ring2-color", p[2]);
@@ -770,8 +564,8 @@
       root.style.setProperty("--face-color", p[6]);
     }
 
-    function normalizeSceneState(rawState) {
-      const state = rawState || "idle";
+    function normalizeSceneState(raw) {
+      const state = raw || "idle";
       if (["idle", "thinking", "executing", "success", "error"].includes(state)) return state;
       if (state === "preparing") return "thinking";
       if (state === "warning") return "error";
@@ -784,216 +578,112 @@
       currentOperationalState = opState;
       pet.classList.remove("scene-idle", "scene-thinking", "scene-executing", "scene-success", "scene-error");
       pet.classList.add(`scene-${opState}`);
-      setOperationalPalette(opState);
-
-      const changedScene = opState !== lastSceneState;
+      setPalette(opState);
+      const changed = opState !== lastSceneState;
       lastSceneState = opState;
 
       if (opState === "idle") {
-        mood.textContent = "LIVE";
-        bubble.textContent = "Tócame para hablar 👾";
+        mood.textContent = "ACTIVA";
+        bubble.textContent = "Tócame para hablar";
         window.electronAPI?.updateMovementMode?.("vivo");
         return false;
       }
 
-      pet.classList.remove("event-pulse");
-      void pet.offsetWidth;
-      pet.classList.add("event-pulse");
-      setTimeout(() => pet.classList.remove("event-pulse"), 700);
-
+      const labels = { thinking: "Calculando…", executing: "Operando…", success: "Listo", error: "Alerta" };
+      mood.textContent = opState.toUpperCase();
+      bubble.textContent = scene?.summary || labels[opState] || "Operando…";
       window.electronAPI?.updateMovementMode?.(opState === "executing" ? "pause" : "vivo");
-      const labels = {
-        thinking: "Compilando…",
-        executing: "Escaneando…",
-        success: "Acceso OK",
-        error: "Abortado",
-      };
-      mood.textContent = labels[opState];
-      bubble.textContent = scene.summary || labels[opState] || "Operando…";
 
-      if ((scene.event_id && scene.event_id !== lastOperationalEventId) || changedScene) {
-        lastOperationalEventId = scene.event_id || lastOperationalEventId;
-        if (opState === "success") {
-          pet.classList.add("celebrate", "success-flash");
-          setTimeout(() => pet.classList.remove("celebrate", "success-flash"), 2000);
-        } else if (opState === "error") {
-          pet.classList.add("error-shake");
-          setTimeout(() => pet.classList.remove("error-shake"), 700);
+      if ((scene?.event_id && scene.event_id !== lastOperationalEventId) || changed) {
+        lastOperationalEventId = scene?.event_id || lastOperationalEventId;
+        if (opState === "success") triggerCelebrate(false);
+        if (opState === "error") {
+          pet.classList.add("scene-error");
+          setTimeout(() => pet.classList.remove("scene-error"), 800);
         }
       }
       return true;
     }
 
     function applyVisualState(state) {
-      if (customStateActive) return;
-      if (isSleeping || isCelebrating || isGlowing || isOffline) return;
-
+      if (customStateActive || isSleeping || isCelebrating || isGlowing || isOffline) return;
       const conf = state.config || {};
-      const isTranquilo = state.mood === "tranquilo" || conf.quiet_mode;
-      mood.textContent = isTranquilo ? "TRANQUILA" : "ACTIVA";
-
       const root = document.documentElement;
-      
-      // Scale
-      if (conf.size === "pequeño") root.style.setProperty("--pet-scale", "0.75");
-      else if (conf.size === "grande") root.style.setProperty("--pet-scale", "1.25");
-      else root.style.setProperty("--pet-scale", "1.0");
 
-      // Speed mult
-      let sMult = 1.0;
-      if (conf.movement_speed === "lenta") sMult = 1.5;
-      else if (conf.movement_speed === "rápida" || conf.movement_speed === "rapida") sMult = 0.6;
+      if (conf.size === "pequeño") root.style.setProperty("--pet-scale", "0.82");
+      else if (conf.size === "grande") root.style.setProperty("--pet-scale", "1.18");
+      else root.style.setProperty("--pet-scale", "1");
 
-      // Theme logic
-      let theme = conf.theme || "violeta";
-
-      if (isTranquilo) {
-        root.style.setProperty("--glow-color", "rgba(71, 85, 105, 0.4)");
-        root.style.setProperty("--float-duration", `${8 * sMult}s`);
-        root.style.setProperty("--spin-r1-duration", `${28 * sMult}s`);
-        root.style.setProperty("--spin-r2-duration", `${20 * sMult}s`);
-        root.style.setProperty("--ring1-color", "#475569");
-        root.style.setProperty("--ring2-color", "#334155");
-        root.style.setProperty("--ring3-color", "#64748b");
-        root.style.setProperty("--core-stroke", "#475569");
-        root.style.setProperty("--core-fill", "rgba(30, 41, 59, 0.2)");
-        root.style.setProperty("--face-color", "#cbd5e1");
-        
-        window.electronAPI?.updateMovementMode?.("suave");
-        chatterMode = "bajo";
-      } else {
-        root.style.setProperty("--float-duration", `${4 * sMult}s`);
-        root.style.setProperty("--spin-r1-duration", `${14 * sMult}s`);
-        root.style.setProperty("--spin-r2-duration", `${10 * sMult}s`);
-        
-        if (theme === "verde") {
-          root.style.setProperty("--glow-color", "rgba(34, 197, 94, 0.8)");
-          root.style.setProperty("--ring1-color", "#16a34a");
-          root.style.setProperty("--ring2-color", "#4ade80");
-          root.style.setProperty("--ring3-color", "#4ade80");
-          root.style.setProperty("--core-stroke", "#22c55e");
-          root.style.setProperty("--core-fill", "rgba(21, 128, 61, 0.42)");
-          root.style.setProperty("--face-color", "#bbf7d0");
-        } else if (theme === "rojo") {
-          root.style.setProperty("--glow-color", "rgba(239, 68, 68, 0.8)");
-          root.style.setProperty("--ring1-color", "#dc2626");
-          root.style.setProperty("--ring2-color", "#f87171");
-          root.style.setProperty("--ring3-color", "#ef4444");
-          root.style.setProperty("--core-stroke", "#ef4444");
-          root.style.setProperty("--core-fill", "rgba(153, 27, 27, 0.42)");
-          root.style.setProperty("--face-color", "#fecaca");
-        } else if (theme === "neón" || theme === "neon") {
-          root.style.setProperty("--glow-color", "rgba(6, 182, 212, 0.9)");
-          root.style.setProperty("--ring1-color", "#0891b2");
-          root.style.setProperty("--ring2-color", "#22d3ee");
-          root.style.setProperty("--ring3-color", "#22d3ee");
-          root.style.setProperty("--core-stroke", "#06b6d4");
-          root.style.setProperty("--core-fill", "rgba(22, 78, 99, 0.6)");
-          root.style.setProperty("--face-color", "#cffafe");
-        } else {
-          // violeta (Demonic Special Theme)
-          root.style.setProperty("--glow-color", "rgba(147, 51, 234, 0.8)");
-          root.style.setProperty("--ring1-color", "#7e22ce");
-          root.style.setProperty("--ring2-color", "#a855f7");
-          root.style.setProperty("--ring3-color", "#ec4899");
-          root.style.setProperty("--core-stroke", "#d946ef");
-          root.style.setProperty("--core-fill", "rgba(76, 29, 149, 0.35)");
-          root.style.setProperty("--face-color", "#fdf4ff");
-        }
-        
-        window.electronAPI?.updateMovementMode?.("vivo");
-        chatterMode = "normal";
-      }
+      chatterMode = conf.quiet_mode || state.mood === "tranquilo" ? "bajo" : "normal";
+      setPalette(chatterMode === "bajo" ? "sleep" : "idle");
+      mood.textContent = chatterMode === "bajo" ? "SOMBRA" : "ACTIVA";
+      window.electronAPI?.updateMovementMode?.(chatterMode === "bajo" ? "suave" : "vivo");
     }
 
-    function triggerCelebrate() {
+    function triggerCelebrate(restore = true) {
       if (isSleeping) return;
       isCelebrating = true;
       pet.classList.add("celebrate");
-      bubble.textContent = "Inyección cargada ⚡";
+      setPalette("success");
+      bubble.textContent = "Habilidad cargada";
       mood.textContent = "LOADED";
-      
-      const root = document.documentElement;
-      root.style.setProperty("--glow-color", "rgba(236, 72, 153, 0.9)");
-      
       setTimeout(() => {
         pet.classList.remove("celebrate");
         isCelebrating = false;
-        if (latestState) applyVisualState(latestState);
-      }, 3500);
+        if (restore && latestState) applyVisualState(latestState);
+      }, 1600);
     }
 
     function triggerGlow() {
       if (isSleeping) return;
       isGlowing = true;
       pet.classList.add("glow-bright");
-      bubble.textContent = "Credential dump guardado 👾";
-      mood.textContent = "DUMPED";
-      
+      bubble.textContent = "Recuerdo guardado";
+      mood.textContent = "MEM";
       setTimeout(() => {
         pet.classList.remove("glow-bright");
         isGlowing = false;
         if (latestState) applyVisualState(latestState);
-      }, 3500);
+      }, 2500);
     }
 
     function triggerSleep() {
       isSleeping = true;
-      mood.textContent = "Zzz...";
-      bubble.textContent = "Goatky hibernando. Limpieza de memoria.";
-      
-      const root = document.documentElement;
-      root.style.setProperty("--glow-color", "rgba(30, 41, 59, 0.3)");
-      root.style.setProperty("--float-duration", "12s");
-      root.style.setProperty("--spin-r1-duration", "50s");
-      root.style.setProperty("--spin-r2-duration", "40s");
-      root.style.setProperty("--ring1-color", "#334155");
-      root.style.setProperty("--ring2-color", "#1e293b");
-      root.style.setProperty("--ring3-color", "#0f172a");
-      root.style.setProperty("--core-stroke", "#1e293b");
-      root.style.setProperty("--core-fill", "rgba(2, 6, 23, 0.6)");
-      root.style.setProperty("--face-color", "#1e293b");
-      
+      setPalette("sleep");
+      mood.textContent = "Zzz";
+      bubble.textContent = "Goatky hibernando.";
       window.electronAPI?.updateMovementMode?.("pause");
-      
       document.querySelector(".eyes-open").style.display = "none";
       document.querySelector(".eyes-closed").style.display = "block";
       document.getElementById("mouth-open").style.display = "none";
       document.getElementById("mouth-closed").style.display = "block";
-      
+
       setTimeout(() => {
         isSleeping = false;
-        
         document.querySelector(".eyes-open").style.display = "block";
         document.querySelector(".eyes-closed").style.display = "none";
         document.getElementById("mouth-open").style.display = "block";
         document.getElementById("mouth-closed").style.display = "none";
-        
-        bubble.textContent = "Esperando orden.";
-        
         if (latestState) applyVisualState(latestState);
       }, 12000);
     }
 
+    function updatePhysicsClass(state) {
+      pet.classList.remove("physics-grounded_walk", "physics-hop", "physics-idle_grounded", "physics-fly", "physics-dash", "physics-warp", "physics-warping-transition");
+      if (state) pet.classList.add(`physics-${state}`);
+    }
+
     async function pollState() {
       try {
-        if (!window.electronAPI || !window.electronAPI.getCompanionState) return;
+        if (!window.electronAPI?.getCompanionState) return;
         const data = await window.electronAPI.getCompanionState();
-        
+
         if (!data.ok) {
           if (!isOffline) {
             isOffline = true;
+            setPalette("error");
             mood.textContent = "OFFLINE";
-            bubble.textContent = data.error || "Conexión perdida con el host...";
-            
-            const root = document.documentElement;
-            root.style.setProperty("--glow-color", "rgba(239, 68, 68, 0.4)");
-            root.style.setProperty("--ring1-color", "#fca5a5");
-            root.style.setProperty("--ring2-color", "#f87171");
-            root.style.setProperty("--ring3-color", "#ef4444");
-            root.style.setProperty("--core-stroke", "#dc2626");
-            root.style.setProperty("--core-fill", "rgba(127, 29, 29, 0.4)");
-            root.style.setProperty("--face-color", "#fca5a5");
+            bubble.textContent = data.error || "Desconectado";
             window.electronAPI?.updateMovementMode?.("pause");
           }
           return;
@@ -1001,235 +691,52 @@
 
         if (isOffline) {
           isOffline = false;
-          bubble.textContent = "¡Conexión de red activa! 👾";
-          setTimeout(() => { if (!isOffline) bubble.textContent = "Tócame para hablar 👾"; }, 2500);
+          bubble.textContent = "Conexión restaurada";
         }
 
         latestState = data;
 
         if (data.last_event_id && data.last_event_id !== lastSeenEventId) {
-          const oldEventId = lastSeenEventId;
+          const old = lastSeenEventId;
           lastSeenEventId = data.last_event_id;
-
-          if (oldEventId !== null) {
-            if (data.last_event_type === "dream_cycle") {
-              triggerSleep();
-            } else if (data.last_event_type === "skill_learned") {
-              triggerCelebrate();
-            } else if (data.last_event_type === "memory_learned") {
-              triggerGlow();
-            }
+          if (old !== null) {
+            if (data.last_event_type === "dream_cycle") triggerSleep();
+            else if (data.last_event_type === "skill_learned") triggerCelebrate();
+            else if (data.last_event_type === "memory_learned") triggerGlow();
           }
         }
 
-        if (!applyOperationalScene(data.operational_scene)) {
-          applyVisualState(data);
-        }
+        if (!applyOperationalScene(data.operational_scene)) applyVisualState(data);
       } catch (err) {
         console.error("Error polling state IPC:", err);
       }
     }
 
-    // Canvas particle and wormhole engine setup
-    const canvas = document.getElementById("canvas-fx");
-    const ctx = canvas.getContext("2d");
-    
-    function resizeCanvas() {
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = 240 * dpr;
-      canvas.height = 240 * dpr;
-      ctx.resetTransform();
-      ctx.scale(dpr, dpr);
-    }
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+    document.getElementById("close-pet").addEventListener("click", (event) => {
+      event.stopPropagation();
+      window.electronAPI?.closeApp?.();
+    });
 
-    class WormholeParticle {
-      constructor() {
-        this.reset();
-      }
+    document.getElementById("settings-pet").addEventListener("click", (event) => {
+      event.stopPropagation();
+      window.electronAPI?.openSettings?.();
+    });
 
-      reset() {
-        this.angle = Math.random() * Math.PI * 2;
-        this.r = Math.random() * 85 + 25;
-        this.speed = Math.random() * 1.6 + 0.9;
-        this.size = Math.random() * 2.2 + 0.8;
-        
-        const theme = latestState?.config?.theme || "violeta";
-        let colors = ["rgba(168, 85, 247,", "rgba(239, 68, 68,", "rgba(236, 72, 153,"];
-        if (theme === "verde") {
-          colors = ["rgba(34, 197, 94,", "rgba(74, 222, 128,", "rgba(22, 101, 52,"];
-        } else if (theme === "rojo") {
-          colors = ["rgba(239, 68, 68,", "rgba(248, 113, 113,", "rgba(153, 27, 27,"];
-        } else if (theme === "neón" || theme === "neon") {
-          colors = ["rgba(6, 182, 212,", "rgba(34, 211, 238,", "rgba(8, 145, 178,"];
+    pet.addEventListener("click", () => {
+      window.electronAPI?.userActivity?.();
+      window.electronAPI?.openChat?.();
+      bubble.textContent = "Abriendo chat…";
+      mood.textContent = "CHAT";
+      setTimeout(() => {
+        if (!customStateActive && latestState) applyVisualState(latestState);
+        else if (!customStateActive) {
+          bubble.textContent = "Tócame para hablar";
+          mood.textContent = "ACTIVA";
         }
-        this.color = colors[Math.floor(Math.random() * colors.length)];
-      }
+      }, 2200);
+    });
 
-      update(dt, state) {
-        if (state === "entering") {
-          const omega = (4.5 / (this.r + 4)) * this.speed;
-          this.angle += omega * dt * 60;
-          this.r -= this.speed * dt * 140;
-          if (this.r < 4) {
-            this.reset();
-            this.r = Math.random() * 20 + 80;
-          }
-        } else {
-          const omega = (4.5 / (this.r + 4)) * this.speed;
-          this.angle -= omega * dt * 60;
-          this.r += this.speed * dt * 180;
-          if (this.r > 110) {
-            this.reset();
-            this.r = Math.random() * 15;
-          }
-        }
-      }
-
-      draw(ctx, scale) {
-        const x = 120 + Math.cos(this.angle) * this.r * scale;
-        const y = 120 + Math.sin(this.angle) * this.r * scale;
-        
-        ctx.fillStyle = this.color + "0.85)";
-        ctx.beginPath();
-        ctx.arc(x, y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    const wormholeParticles = Array.from({ length: 55 }, () => new WormholeParticle());
-
-    let portalState = "inactive";
-    let portalTime = 0;
-    let lastTime = performance.now();
-
-    function renderLoop(now) {
-      const dt = Math.min((now - lastTime) / 1000, 0.1);
-      lastTime = now;
-
-      ctx.clearRect(0, 0, 240, 240);
-
-      const vx = currentVx;
-      const vy = currentVy;
-      const speed = Math.sqrt(vx * vx + vy * vy);
-
-      if (portalState !== "inactive") {
-        portalTime += dt * 1000;
-        
-        let coreRadius = 0;
-        let coreOpacity = 0;
-        let portalScale = 1.0;
-
-        if (portalState === "entering") {
-          const progress = Math.min(portalTime / 500, 1.0);
-          if (progress < 0.6) {
-            portalScale = (progress / 0.6) * 1.15;
-          } else {
-            portalScale = 1.15 - ((progress - 0.6) / 0.4) * 0.2;
-          }
-          coreRadius = 45 * progress;
-          coreOpacity = progress;
-          
-          if (portalTime < 300) {
-            const shockProgress = portalTime / 300;
-            ctx.beginPath();
-            ctx.arc(120, 120, shockProgress * 110, 0, Math.PI * 2);
-            ctx.strokeStyle = "rgba(239, 68, 68, " + (1 - shockProgress) * 0.6 + ")";
-            ctx.lineWidth = 3 * (1 - shockProgress);
-            ctx.stroke();
-          }
-        } else if (portalState === "exiting") {
-          const progress = Math.min(portalTime / 600, 1.0);
-          portalScale = 1.0 - progress;
-          coreRadius = 45 * (1 - progress);
-          coreOpacity = 1 - progress;
-
-          if (progress > 0.95) {
-            portalState = "inactive";
-          }
-
-          if (portalTime < 350) {
-            const shockProgress = portalTime / 350;
-            ctx.beginPath();
-            ctx.arc(120, 120, shockProgress * 115, 0, Math.PI * 2);
-            ctx.strokeStyle = "rgba(236, 72, 153, " + (1 - shockProgress) * 0.7 + ")";
-            ctx.lineWidth = 4 * (1 - shockProgress);
-            ctx.stroke();
-            
-            ctx.fillStyle = "rgba(255, 255, 255, " + (1 - shockProgress) + ")";
-            for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 4) {
-              const sx = 120 + Math.cos(angle) * shockProgress * 95;
-              const sy = 120 + Math.sin(angle) * shockProgress * 95;
-              ctx.beginPath();
-              ctx.arc(sx, sy, 2, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
-        }
-
-        if (coreRadius > 0) {
-          const theme = latestState?.config?.theme || "violeta";
-          let stop0 = "rgba(239, 68, 68, 0.85)";
-          let stop1 = "rgba(168, 85, 247, 0.65)";
-          let stop2 = "rgba(236, 72, 153, 0.35)";
-          
-          if (theme === "verde") {
-            stop0 = "rgba(74, 222, 128, 0.85)";
-            stop1 = "rgba(34, 197, 94, 0.65)";
-            stop2 = "rgba(134, 239, 172, 0.35)";
-          } else if (theme === "rojo") {
-            stop0 = "rgba(248, 113, 113, 0.85)";
-            stop1 = "rgba(239, 68, 68, 0.65)";
-            stop2 = "rgba(185, 28, 28, 0.35)";
-          } else if (theme === "neón" || theme === "neon") {
-            stop0 = "rgba(34, 211, 238, 0.85)";
-            stop1 = "rgba(6, 182, 212, 0.65)";
-            stop2 = "rgba(165, 243, 252, 0.35)";
-          }
-
-          const grad = ctx.createRadialGradient(120, 120, coreRadius * 0.4, 120, 120, coreRadius * 1.9);
-          grad.addColorStop(0, "rgba(3, 7, 18, 0.9)");
-          grad.addColorStop(0.2, stop0);
-          grad.addColorStop(0.5, stop1);
-          grad.addColorStop(0.8, stop2);
-          grad.addColorStop(1, "rgba(0, 0, 0, 0)");
-          
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(120, 120, coreRadius * 2.0, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        for (let i = 0; i < wormholeParticles.length; i++) {
-          wormholeParticles[i].update(dt, portalState);
-          wormholeParticles[i].draw(ctx, portalScale);
-        }
-
-        if (coreRadius > 0) {
-          ctx.beginPath();
-          ctx.arc(120, 120, coreRadius * 0.75, 0, Math.PI * 2);
-          ctx.fillStyle = "#030712";
-          ctx.fill();
-          
-          ctx.strokeStyle = "rgba(220, 38, 38, " + coreOpacity + ")";
-          ctx.lineWidth = 2.5;
-          ctx.stroke();
-        }
-      }
-
-      requestAnimationFrame(renderLoop);
-    }
-    requestAnimationFrame(renderLoop);
-
-    async function init() {
-      pollState();
-      setInterval(pollState, 3000);
-    }
-    
-    init();
-
-    if (window.electronAPI && window.electronAPI.onSetState) {
+    if (window.electronAPI?.onSetState) {
       window.electronAPI.onSetState((data) => {
         const badge = document.getElementById("status-badge");
         if (!badge) return;
@@ -1238,39 +745,27 @@
           customStateActive = true;
           badge.className = "thinking";
           badge.textContent = "?";
-          bubble.textContent = "Compilando respuesta... 👾";
-          mood.textContent = "PENSANDO";
-          
-          const root = document.documentElement;
-          root.style.setProperty("--glow-color", "rgba(239, 68, 68, 0.9)");
+          setPalette("thinking");
+          bubble.textContent = "Calculando respuesta…";
+          mood.textContent = "THINK";
           window.electronAPI?.updateMovementMode?.("vivo");
         } else if (data.state === "response-ready") {
           customStateActive = true;
           badge.className = "response-ready";
           badge.textContent = "!";
-          bubble.textContent = "¡Shell disponible! ✉️";
+          setPalette("success");
+          bubble.textContent = "Respuesta lista.";
           mood.textContent = "READY";
-
-          pet.classList.remove("celebrate");
-          void pet.offsetWidth;
-          pet.classList.add("celebrate");
-          setTimeout(() => pet.classList.remove("celebrate"), 1500);
+          triggerCelebrate(false);
         } else {
           customStateActive = false;
           badge.className = "hidden";
-          if (latestState) {
-            if (!applyOperationalScene(latestState.operational_scene)) {
-              applyVisualState(latestState);
-            }
-          } else {
-            mood.textContent = "LIVE";
-            bubble.textContent = "Tócame para hablar 👾";
-          }
+          if (latestState) applyVisualState(latestState);
         }
       });
     }
 
-    if (window.electronAPI && window.electronAPI.onEvent) {
+    if (window.electronAPI?.onEvent) {
       window.electronAPI.onEvent("pet:config-changed", (newConfig) => {
         if (latestState) {
           latestState.config = newConfig;
@@ -1278,21 +773,14 @@
         }
       });
 
-      window.electronAPI.onEvent("pet:celebrate", () => {
-        triggerCelebrate();
-      });
-
-      window.electronAPI.onEvent("pet:glow", () => {
-        triggerGlow();
-      });
-
-      window.electronAPI.onEvent("pet:sleep", () => {
-        triggerSleep();
-      });
+      window.electronAPI.onEvent("pet:celebrate", () => triggerCelebrate());
+      window.electronAPI.onEvent("pet:glow", () => triggerGlow());
+      window.electronAPI.onEvent("pet:sleep", () => triggerSleep());
 
       window.electronAPI.onEvent("pet:warp-start", () => {
         portalState = "entering";
         portalTime = 0;
+        updatePhysicsClass("warp");
         pet.classList.remove("portal-entering", "portal-exiting", "celebrate", "bounce");
         void pet.offsetWidth;
         pet.classList.add("portal-entering");
@@ -1304,108 +792,105 @@
         pet.classList.remove("portal-entering", "portal-exiting", "celebrate", "bounce");
         void pet.offsetWidth;
         pet.classList.add("portal-exiting");
-
-        setTimeout(() => {
-          pet.classList.remove("portal-exiting");
-        }, 600);
+        setTimeout(() => pet.classList.remove("portal-exiting"), 650);
       });
 
       window.electronAPI.onEvent("pet:step", (data) => {
         if (!pet) return;
-        
         const vx = data.vx || 0;
         const vy = data.vy || 0;
-        const state = data.behaviorState;
+        const state = data.behaviorState || "idle_grounded";
 
         currentVx = vx;
         currentVy = vy;
-        currentBehaviorState = state;
+        updatePhysicsClass(state);
 
-        if (pet.classList.contains("portal-entering") || pet.classList.contains("portal-exiting")) {
-          return;
-        }
-
-        // Apply dynamic styling classes based on physical behaviorState
-        pet.classList.remove(
-          "physics-grounded_walk",
-          "physics-hop",
-          "physics-idle_grounded",
-          "physics-fly",
-          "physics-dash",
-          "physics-warp"
-        );
-        if (state) {
-          pet.classList.add(`physics-${state}`);
-        }
-
-        const targetTilt = vx * 24;
-        currentTilt = currentTilt + (targetTilt - currentTilt) * 0.15;
-
-        const speed = Math.sqrt(vx * vx + vy * vy);
-        const stretchFactor = Math.min(0.05, speed * 0.03);
-        const scaleX = 1 + stretchFactor;
-        const scaleY = 1 - stretchFactor;
+        if (pet.classList.contains("portal-entering") || pet.classList.contains("portal-exiting")) return;
 
         if (vx < -0.05) currentFlip = -1;
         else if (vx > 0.05) currentFlip = 1;
 
-        if ((state === "dash" || state === "fly") && speed > 0.4) {
-          pet.classList.add("dashing");
-        } else {
-          pet.classList.remove("dashing");
-        }
+        const targetTilt = Math.max(-10, Math.min(10, vx * 3.2));
+        currentTilt = currentTilt + (targetTilt - currentTilt) * 0.18;
 
-        // Apply physical movements (tilting & flipping horizontally depending on vx direction)
-        const floatSway = state === "fly" ? Math.sin(Date.now() / 240) * 1.5 : 0;
+        const speed = Math.sqrt(vx * vx + vy * vy);
+        const stretchFactor = Math.min(0.08, speed * 0.015);
+        const scaleX = 1 + stretchFactor;
+        const scaleY = 1 - stretchFactor;
+
+        if ((state === "dash" || state === "fly") && speed > 0.4) pet.classList.add("dashing");
+        else pet.classList.remove("dashing");
+
+        const floatSway = state === "fly" ? Math.sin(Date.now() / 180) * 2.2 : 0;
         pet.style.transform = `rotate(${currentTilt + floatSway}deg) scaleX(${currentFlip * scaleX}) scaleY(${scaleY})`;
       });
     }
 
-    // Demonic Cybersecurity phrases
-    setInterval(() => {
-      if (customStateActive) return;
-      if (isSleeping || isCelebrating || isGlowing || currentOperationalState !== "idle") return;
-      
-      const threshold = chatterMode === "bajo" ? 0.90 : 0.70;
-      if (Math.random() > threshold) {
-        let phrases = [
-          "Interceptando tráfico... 👾",
-          "Auditando puertos locales.",
-          "Goatky en modo sigiloso.",
-          "Esperando orden de ejecución.",
-          "Conexión reversa establecida.",
-          "Cabra cibernética rastreando 🐐"
-        ];
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = 240 * dpr;
+      canvas.height = 240 * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
 
-        const skillCount = latestState?.skill_count || 0;
-        if (skillCount <= 2) {
-          phrases = [
-            "¡Buffer listo! ⚡",
-            "Iniciando escáner ARP...",
-            "Visor calibrado en modo demoníaco.",
-            "¡Goatky activo en la sombra! 🐐",
-            "Buscando exploits locales..."
-          ];
-        } else if (skillCount <= 5) {
-          phrases = [
-            "Analizando la subred en busca de fallos... 🧠",
-            "Goatky asistiendo en el Red Team Lab.",
-            "Guardando trazas de inyección SQL.",
-            "Buscando debilidades de bypass...",
-            "Tengo firmas de intrusión listas."
-          ];
-        } else {
-          phrases = [
-            "Control total de la infraestructura... 🌌",
-            "Kernel compromised con éxito.",
-            "Realizando volcado de LSASS en memoria.",
-            "Escuchando en el puerto local...",
-            "Soy Goatky, tu compañero de Red Team 🐐✨"
-          ];
-        }
-        bubble.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    function renderLoop(now) {
+      const dt = Math.min((now - lastFrameTime) / 1000, .1);
+      lastFrameTime = now;
+      ctx.clearRect(0, 0, 240, 240);
+
+      if (portalState !== "inactive") {
+        portalTime += dt * 1000;
+        const duration = portalState === "entering" ? 500 : 620;
+        const progress = Math.min(portalTime / duration, 1);
+        const alpha = portalState === "entering" ? progress : 1 - progress;
+        const radius = 26 + progress * 82;
+
+        const grad = ctx.createRadialGradient(120, 120, 8, 120, 120, radius);
+        grad.addColorStop(0, `rgba(3,3,8,${0.9 * alpha})`);
+        grad.addColorStop(.35, `rgba(236,72,153,${0.58 * alpha})`);
+        grad.addColorStop(.72, `rgba(126,34,206,${0.34 * alpha})`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(120, 120, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = `rgba(236,72,153,${0.75 * alpha})`;
+        ctx.lineWidth = 3;
+        ctx.setLineDash([16, 12]);
+        ctx.beginPath();
+        ctx.arc(120, 120, radius * .72, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        if (portalState === "exiting" && progress >= 1) portalState = "inactive";
       }
-    }, 9000);
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    setInterval(() => {
+      if (customStateActive || isSleeping || isCelebrating || isGlowing || currentOperationalState !== "idle") return;
+      const threshold = chatterMode === "bajo" ? 0.92 : 0.74;
+      if (Math.random() <= threshold) return;
+      const phrases = [
+        "Todo estable.",
+        "Goatky activo.",
+        "Modo neón listo.",
+        "Memoria local estable.",
+        "Esperando orden, jefe.",
+        "Ronda de escritorio activa."
+      ];
+      bubble.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    }, 8500);
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+    requestAnimationFrame(renderLoop);
+    pollState();
+    setInterval(pollState, 3000);
   </script>
 </body>
 </html>

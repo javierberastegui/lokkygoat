@@ -15,8 +15,10 @@ El proyecto se encuentra modularizado bajo la siguiente arquitectura estable:
 - **Estructura Modular (`src/`):** La lógica de configuración, estado, eventos, proveedores de IA, física de mascota y manejadores de IPC está desacoplada de `main.js`.
 - **Física de Mascota Aislada:** Encapsulada en `src/pet/petPhysics.js` y calculada en tiempo real.
 - **Múltiples Proveedores de IA:** Adaptadores separados para Ollama, OpenAI, Claude y Hermes coordinados por `providerManager.js`.
+- **Configuración por Proveedor:** Gestión modularizada de parámetros de conexión en `config.json` de manera que cambiar de proveedor no borra las credenciales de otros.
+- **Comprobación de Salud y Conectividad:** Comprobación asíncrona en segundo plano del estado de salud de los proveedores, visible en la barra lateral del chat y testeable desde ajustes.
 - **Bus de Eventos Estructurados:** Implementado en `src/events/eventBus.js` con procesamiento de reglas.
-- **Seguridad en Logs:** Sanitización de `apiKey` activa al cargar/guardar configuración y emitir eventos.
+- **Seguridad en Logs:** Sanitización de `apiKey` activa al cargar/guardar configuración y emitir eventos (incluyendo las nuevas claves estructuradas).
 - **Superficies Visuales:** Ventanas de chat, mascota y ajustes conectadas vía IPC.
 
 ## Decisión importante

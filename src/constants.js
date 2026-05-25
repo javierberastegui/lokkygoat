@@ -11,9 +11,38 @@ const DEFAULT_CONFIG = {
   theme: "violeta",
   quiet_mode: false,
   provider: "ollama",
-  apiKey: "",
-  apiUrl: "http://127.0.0.1:11434",
-  model: "llama3",
+  providers: {
+    ollama: {
+      apiUrl: "http://127.0.0.1:11434",
+      model: "llama3"
+    },
+    openai: {
+      apiKey: "",
+      model: "gpt-4o-mini"
+    },
+    claude: {
+      apiKey: "",
+      model: "claude-3-5-sonnet-latest"
+    },
+    hermes: {
+      apiUrl: "http://127.0.0.1:9119"
+    },
+    openclaw: {
+      apiKey: "",
+      apiUrl: "http://127.0.0.1:8000/v1/chat/completions",
+      model: "default"
+    },
+    codex: {
+      apiKey: "",
+      apiUrl: "http://127.0.0.1:8000/v1/chat/completions",
+      model: "default"
+    },
+    custom: {
+      apiKey: "",
+      apiUrl: "http://127.0.0.1:8000/v1/chat/completions",
+      model: "default"
+    }
+  },
   memory_count: 0,
   skill_count: 0
 };

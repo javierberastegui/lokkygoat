@@ -25,6 +25,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   updateLearningStats: (stats) => ipcRenderer.invoke("pet:update-learning-stats", stats),
   getCompanionState: () => ipcRenderer.invoke("app:get-companion-state"),
   saveCompanionConfig: (config) => ipcRenderer.invoke("app:save-companion-config", config),
-  sendChatMessage: (message) => ipcRenderer.invoke("app:send-chat-message", message)
+  sendChatMessage: (message) => ipcRenderer.invoke("app:send-chat-message", message),
+  testProviderConnection: (payload) => ipcRenderer.invoke("app:test-provider-connection", payload)
 });
 

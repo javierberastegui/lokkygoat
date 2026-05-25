@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <title>Ajustes de Lokkygoat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     html, body {
       margin: 0;
@@ -10,7 +13,7 @@
       height: 100%;
       background: transparent;
       overflow: hidden;
-      font-family: system-ui, sans-serif;
+      font-family: 'Outfit', system-ui, sans-serif;
     }
 
     #panel {
@@ -55,9 +58,19 @@
       color: #fecdd3;
       background: rgba(127, 29, 29, .35);
       border-radius: 999px;
-      padding: 5px 10px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       -webkit-app-region: no-drag;
+      transition: all 0.2s;
+    }
+
+    #close:hover {
+      background: rgba(244, 63, 94, 0.6);
+      color: white;
     }
 
     #content {
@@ -66,7 +79,7 @@
       padding: 16px 20px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     /* Scrollbar design */
@@ -79,6 +92,18 @@
     #content::-webkit-scrollbar-thumb {
       background: rgba(168, 85, 247, 0.3);
       border-radius: 999px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #a855f7;
+      margin-top: 6px;
+      margin-bottom: 2px;
+      border-bottom: 1px solid rgba(168, 85, 247, .2);
+      padding-bottom: 4px;
     }
 
     .field {
@@ -105,10 +130,11 @@
       background: rgba(2, 6, 23, .55);
       border: 1px solid rgba(148, 163, 184, .2);
       color: #f8fafc;
-      padding: 7px 9px;
+      padding: 8px 10px;
       border-radius: 8px;
       font-size: 12px;
       outline: none;
+      font-family: inherit;
     }
 
     input[type="text"]:focus, input[type="password"]:focus, select:focus {
@@ -117,26 +143,55 @@
     }
 
     #save {
-      margin-top: 10px;
       background: linear-gradient(135deg, #7c3aed, #2563eb);
       color: white;
       border: none;
-      padding: 9px;
+      padding: 10px;
       border-radius: 12px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
+      transition: all 0.2s;
       flex-shrink: 0;
+      font-family: inherit;
     }
 
     #save:hover {
       opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    #save:active {
+      transform: translateY(1px);
     }
 
     #save:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
+    }
+
+    #test-connection {
+      background: rgba(148, 163, 184, 0.1);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: #f8fafc;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    #test-connection:hover {
+      background: rgba(148, 163, 184, 0.2);
+      border-color: rgba(168, 85, 247, .4);
+      transform: translateY(-1px);
+    }
+
+    #test-connection:active {
+      transform: translateY(1px);
     }
   </style>
 </head>
@@ -150,6 +205,9 @@
       <button id="close" title="Cerrar">×</button>
     </div>
     <div id="content">
+      <!-- Sección Mascota -->
+      <div class="section-title">Personalización</div>
+
       <div class="field">
         <label>Nombre de la Cabra</label>
         <input type="text" id="conf-name" placeholder="Cabra" />
@@ -182,6 +240,14 @@
           <option value="neón">Neón</option>
         </select>
       </div>
+      
+      <div class="field row" style="margin-top: 4px; margin-bottom: 6px;">
+        <input type="checkbox" id="conf-quiet" />
+        <label for="conf-quiet" style="cursor:pointer; text-transform:none;">Modo Tranquilo (Flotar suavemente)</label>
+      </div>
+
+      <!-- Sección Conexión IA -->
+      <div class="section-title">Conexión IA</div>
 
       <div class="field">
         <label>Proveedor IA</label>
@@ -211,14 +277,12 @@
         <input type="text" id="conf-model" placeholder="llama3" />
       </div>
       
-      <div class="field row" style="margin-top: 4px;">
-        <input type="checkbox" id="conf-quiet" />
-        <label for="conf-quiet" style="cursor:pointer; text-transform:none;">Modo Tranquilo (Flotar suavemente)</label>
+      <div id="status" style="color:#22d3ee;font-size:12px;text-align:center;min-height:16px;margin-top:4px;word-break:break-all;"></div>
+      
+      <div style="display: flex; gap: 10px; margin-top: 6px; margin-bottom: 10px;">
+        <button id="test-connection" style="flex: 1;">Probar Conexión</button>
+        <button id="save" style="flex: 1;">Guardar</button>
       </div>
-      
-      <div id="status" style="color:#22d3ee;font-size:12px;text-align:center;height:16px;margin-top:4px;"></div>
-      
-      <button id="save">Guardar Cambios</button>
     </div>
   </div>
 
@@ -226,6 +290,10 @@
     document.getElementById("close").addEventListener("click", () => {
       window.electronAPI?.settingsClose?.() || window.close();
     });
+
+    let localConfig = {};
+    let localProviders = {};
+    let currentProvider = "";
 
     function toggleProviderFields() {
       const provider = document.getElementById("conf-provider").value;
@@ -237,42 +305,14 @@
         keyField.style.display = "none";
         urlField.style.display = "flex";
         modelField.style.display = "none";
-        
-        const currentUrl = document.getElementById("conf-url").value;
-        if (!currentUrl || currentUrl.includes("11434") || currentUrl.includes("api.openai.com") || currentUrl.includes("api.anthropic.com")) {
-          document.getElementById("conf-url").value = "http://127.0.0.1:9119";
-        }
       } else if (provider === "ollama") {
         keyField.style.display = "none";
         urlField.style.display = "flex";
         modelField.style.display = "flex";
-        
-        const currentUrl = document.getElementById("conf-url").value;
-        if (!currentUrl || currentUrl.includes("9119") || currentUrl.includes("api.openai.com") || currentUrl.includes("api.anthropic.com")) {
-          document.getElementById("conf-url").value = "http://127.0.0.1:11434";
-        }
-        const currentModel = document.getElementById("conf-model").value;
-        if (!currentModel || currentModel.startsWith("gpt-") || currentModel.startsWith("claude-")) {
-          document.getElementById("conf-model").value = "llama3";
-        }
-      } else if (provider === "openai") {
+      } else if (provider === "openai" || provider === "claude") {
         keyField.style.display = "flex";
         urlField.style.display = "none";
         modelField.style.display = "flex";
-        
-        const currentModel = document.getElementById("conf-model").value;
-        if (!currentModel || currentModel === "llama3" || currentModel.startsWith("claude-")) {
-          document.getElementById("conf-model").value = "gpt-4o-mini";
-        }
-      } else if (provider === "claude") {
-        keyField.style.display = "flex";
-        urlField.style.display = "none";
-        modelField.style.display = "flex";
-        
-        const currentModel = document.getElementById("conf-model").value;
-        if (!currentModel || currentModel === "llama3" || currentModel.startsWith("gpt-")) {
-          document.getElementById("conf-model").value = "claude-3-5-sonnet-latest";
-        }
       } else {
         // custom, openclaw, codex
         keyField.style.display = "flex";
@@ -281,7 +321,49 @@
       }
     }
 
-    document.getElementById("conf-provider").addEventListener("change", toggleProviderFields);
+    function loadProviderFields(provider) {
+      currentProvider = provider;
+      const provConf = localProviders[provider] || {};
+      
+      document.getElementById("conf-key").value = provConf.apiKey || "";
+      document.getElementById("conf-url").value = provConf.apiUrl || "";
+      document.getElementById("conf-model").value = provConf.model || "";
+      
+      // Auto-populate default fields if completely empty
+      const keyInput = document.getElementById("conf-key");
+      const urlInput = document.getElementById("conf-url");
+      const modelInput = document.getElementById("conf-model");
+
+      if (provider === "hermes" && !urlInput.value) {
+        urlInput.value = "http://127.0.0.1:9119";
+      } else if (provider === "ollama") {
+        if (!urlInput.value) urlInput.value = "http://127.0.0.1:11434";
+        if (!modelInput.value) modelInput.value = "llama3";
+      } else if (provider === "openai" && !modelInput.value) {
+        modelInput.value = "gpt-4o-mini";
+      } else if (provider === "claude" && !modelInput.value) {
+        modelInput.value = "claude-3-5-sonnet-latest";
+      } else if (["openclaw", "codex", "custom"].includes(provider)) {
+        if (!urlInput.value) urlInput.value = "http://127.0.0.1:8000/v1/chat/completions";
+        if (!modelInput.value) modelInput.value = "default";
+      }
+      
+      toggleProviderFields();
+    }
+
+    document.getElementById("conf-provider").addEventListener("change", (e) => {
+      // Save current fields into old provider cache
+      if (currentProvider) {
+        localProviders[currentProvider] = {
+          apiKey: document.getElementById("conf-key").value,
+          apiUrl: document.getElementById("conf-url").value,
+          model: document.getElementById("conf-model").value
+        };
+      }
+      
+      const newProv = e.target.value;
+      loadProviderFields(newProv);
+    });
 
     async function loadConfig() {
       try {
@@ -291,26 +373,60 @@
         }
         
         const state = await window.electronAPI.getCompanionState();
-        const conf = state.config || {};
+        localConfig = state.config || {};
+        localProviders = localConfig.providers || {};
         
-        document.getElementById("conf-name").value = conf.name || "Cabra";
-        document.getElementById("conf-size").value = conf.size || "normal";
-        document.getElementById("conf-speed").value = conf.movement_speed || "normal";
-        document.getElementById("conf-theme").value = conf.theme || "violeta";
-        document.getElementById("conf-quiet").checked = conf.quiet_mode || false;
+        document.getElementById("conf-name").value = localConfig.name || "Cabra";
+        document.getElementById("conf-size").value = localConfig.size || "normal";
+        document.getElementById("conf-speed").value = localConfig.movement_speed || "normal";
+        document.getElementById("conf-theme").value = localConfig.theme || "violeta";
+        document.getElementById("conf-quiet").checked = localConfig.quiet_mode || false;
         
-        document.getElementById("conf-provider").value = conf.provider || "ollama";
-        document.getElementById("conf-key").value = conf.apiKey || "";
-        document.getElementById("conf-url").value = conf.apiUrl || "";
-        document.getElementById("conf-model").value = conf.model || "";
+        const activeProv = localConfig.provider || "ollama";
+        document.getElementById("conf-provider").value = activeProv;
         
-        toggleProviderFields();
+        loadProviderFields(activeProv);
       } catch (err) {
         console.error(err);
         document.getElementById("status").textContent = "Error al cargar configuración";
         document.getElementById("status").style.color = "#f43f5e";
       }
     }
+
+    document.getElementById("test-connection").addEventListener("click", async () => {
+      const statusEl = document.getElementById("status");
+      statusEl.textContent = "Probando conexión...";
+      statusEl.style.color = "#eab308";
+      
+      const provider = document.getElementById("conf-provider").value;
+      const apiKey = document.getElementById("conf-key").value;
+      const apiUrl = document.getElementById("conf-url").value;
+      const model = document.getElementById("conf-model").value;
+      
+      try {
+        if (!window.electronAPI || !window.electronAPI.testProviderConnection) {
+          throw new Error("Canal de prueba no disponible.");
+        }
+        
+        const result = await window.electronAPI.testProviderConnection({
+          provider,
+          apiKey,
+          apiUrl,
+          model
+        });
+        
+        if (result.ok) {
+          statusEl.textContent = "🟢 Conexión exitosa";
+          statusEl.style.color = "#4ade80";
+        } else {
+          statusEl.textContent = "🔴 Error: " + result.error;
+          statusEl.style.color = "#f43f5e";
+        }
+      } catch (err) {
+        statusEl.textContent = "🔴 Error: " + err.message;
+        statusEl.style.color = "#f43f5e";
+      }
+    });
 
     document.getElementById("save").addEventListener("click", async () => {
       const statusEl = document.getElementById("status");
@@ -320,6 +436,15 @@
       saveBtn.disabled = true;
 
       try {
+        // Save current fields into provider cache
+        if (currentProvider) {
+          localProviders[currentProvider] = {
+            apiKey: document.getElementById("conf-key").value,
+            apiUrl: document.getElementById("conf-url").value,
+            model: document.getElementById("conf-model").value
+          };
+        }
+
         const payload = {
           name: document.getElementById("conf-name").value,
           size: document.getElementById("conf-size").value,
@@ -327,9 +452,7 @@
           theme: document.getElementById("conf-theme").value,
           quiet_mode: document.getElementById("conf-quiet").checked,
           provider: document.getElementById("conf-provider").value,
-          apiKey: document.getElementById("conf-key").value,
-          apiUrl: document.getElementById("conf-url").value,
-          model: document.getElementById("conf-model").value
+          providers: localProviders
         };
 
         const ok = await window.electronAPI.saveCompanionConfig(payload);

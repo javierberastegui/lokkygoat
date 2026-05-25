@@ -71,3 +71,22 @@ Para continuidad abierta, usar el relevo del dominio correspondiente.
 ### Siguiente paso sugerido
 
 - Validar clic en mascota, chat y ajustes en modo normal.
+
+### Etapa
+
+- Fecha: 2026-05-25
+- Objetivo: Estructurar la configuración por proveedor y realizar migración automática.
+- Contexto breve: Se cambió el formato plano de la configuración en `config.json` a un formato estructurado (`providers: { <provider>: { apiUrl, apiKey, model } }`). Esto evita la pérdida de credenciales de otros proveedores al cambiar de opción. Se implementó migración automática transparente y se actualizó `redactConfig` para ofuscar claves dentro de los logs correspondientes.
+- Archivos nuevos: ninguno.
+- Archivos modificados:
+  - `src/constants.js`
+  - `src/config/configService.js`
+- Dependencias: ninguna.
+- Tests/validaciones: `node --check`
+- Decisiones:
+  - Se implementó una fusión profunda (`deep merge`) con la configuración por defecto para soportar nuevos campos anidados agregados en el futuro.
+  - La migración actúa de forma silenciosa e instantánea al cargar la configuración plana previa.
+- Validación:
+  - Verificado sintácticamente con `node --check`.
+- Incidencias detectadas: ninguna.
+- Siguiente paso sugerido: validar con diferentes configuraciones locales pre-existentes.

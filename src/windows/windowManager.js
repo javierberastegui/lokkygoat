@@ -153,7 +153,7 @@ function createSettingsWindow() {
 
   const a = getArea();
   const width = 340;
-  const height = 480;
+  const height = 570;
 
   settingsWindow = new BrowserWindow({
     width,

@@ -35,8 +35,8 @@ Para historial de etapas, usar el log del dominio.
 
 ## Validaciones pendientes
 
-- Probar la conectividad real con cada uno de los proveedores configurados.
+- Validar el indicador de conexión asíncrono con cada proveedor en producción.
 
 ## Siguiente micro-paso recomendado
 
-- Agregar un timeout a las llamadas de fetch para abortar peticiones colgadas tras 10 segundos.
+- Añadir streaming a las respuestas de chat para mejorar la experiencia del usuario (UX progresiva).

@@ -436,6 +436,13 @@
               <option value="custom">Custom</option>
             </select>
           </div>
+          <div class="sb-stat-row">
+            <span class="sb-stat-label">Estado</span>
+            <span class="sb-stat-val" id="sb-conn-status" style="display: flex; align-items: center; gap: 6px; cursor: pointer;" title="Comprobando conexión... Haz clic para reintentar">
+              <span id="conn-status-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; display: inline-block;"></span>
+              <span id="conn-status-text" style="font-size: 12px; color: #94a3b8;">Comprobando...</span>
+            </span>
+          </div>
           <button id="sb-btn-settings" class="btn-settings-sidebar">
             Configurar Conexión
           </button>
@@ -487,7 +494,9 @@
 
     async function init() {
       await loadSidebarStats();
+      await checkConnectionStatus();
       setInterval(loadSidebarStats, 3000);
+      setInterval(checkConnectionStatus, 15000);
     }
     init();
 
@@ -525,30 +534,33 @@
         
         conf.provider = newProv;
         
-        // Adjust default URLs and models if they are empty or inconsistent
+        if (!conf.providers) {
+          conf.providers = {};
+        }
+        if (!conf.providers[newProv]) {
+          conf.providers[newProv] = {};
+        }
+        
+        const pConf = conf.providers[newProv];
         if (newProv === "ollama") {
-          if (!conf.apiUrl || conf.apiUrl.includes("9119") || conf.apiUrl.includes("openai") || conf.apiUrl.includes("anthropic")) {
-            conf.apiUrl = "http://127.0.0.1:11434";
-          }
-          if (!conf.model || conf.model.startsWith("gpt-") || conf.model.startsWith("claude-")) {
-            conf.model = "llama3";
-          }
+          if (!pConf.apiUrl) pConf.apiUrl = "http://127.0.0.1:11434";
+          if (!pConf.model) pConf.model = "llama3";
         } else if (newProv === "hermes") {
-          if (!conf.apiUrl || conf.apiUrl.includes("11434") || conf.apiUrl.includes("openai") || conf.apiUrl.includes("anthropic")) {
-            conf.apiUrl = "http://127.0.0.1:9119";
-          }
-        } else if (newProv === "openai") {
-          if (!conf.model || conf.model === "llama3" || conf.model.startsWith("claude-")) {
-            conf.model = "gpt-4o-mini";
-          }
-        } else if (newProv === "claude") {
-          if (!conf.model || conf.model === "llama3" || conf.model.startsWith("gpt-")) {
-            conf.model = "claude-3-5-sonnet-latest";
-          }
+          if (!pConf.apiUrl) pConf.apiUrl = "http://127.0.0.1:9119";
+        } else if (newProv === "openai" && !pConf.model) {
+          pConf.model = "gpt-4o-mini";
+        } else if (newProv === "claude" && !pConf.model) {
+          pConf.model = "claude-3-5-sonnet-latest";
+        } else if (["openclaw", "codex", "custom"].includes(newProv)) {
+          if (!pConf.apiUrl) pConf.apiUrl = "http://127.0.0.1:8000/v1/chat/completions";
+          if (!pConf.model) pConf.model = "default";
         }
 
         await window.electronAPI.saveCompanionConfig(conf);
         await loadSidebarStats();
+        
+        // Trigger connection check immediately
+        checkConnectionStatus();
         
         const providerNames = {
           ollama: "Ollama (Local)",
@@ -562,7 +574,7 @@
         addMessage("system", `Proveedor cambiado a: ${providerNames[newProv] || newProv}`);
 
         const needsKey = ["openai", "claude", "openclaw", "codex", "custom"].includes(newProv);
-        const hasKey = conf.apiKey && conf.apiKey.trim().length > 0;
+        const hasKey = pConf.apiKey && pConf.apiKey.trim().length > 0;
         
         if (needsKey && !hasKey) {
           window.electronAPI.openSettings();
@@ -610,6 +622,58 @@
         }
       } catch (_) {}
     }
+
+    async function checkConnectionStatus() {
+      try {
+        if (!window.electronAPI || !window.electronAPI.getCompanionState || !window.electronAPI.testProviderConnection) return;
+        
+        const data = await window.electronAPI.getCompanionState();
+        const conf = data.config || {};
+        const activeProv = conf.provider || "ollama";
+        const provConf = conf.providers?.[activeProv] || {};
+        
+        const dot = document.getElementById("conn-status-dot");
+        const text = document.getElementById("conn-status-text");
+        const container = document.getElementById("sb-conn-status");
+        
+        if (!dot || !text || !container) return;
+        
+        dot.style.background = "#eab308";
+        text.textContent = "Probando...";
+        text.style.color = "#cbd5e1";
+        
+        const result = await window.electronAPI.testProviderConnection({
+          provider: activeProv,
+          apiKey: provConf.apiKey || conf.apiKey || "",
+          apiUrl: provConf.apiUrl || conf.apiUrl || "",
+          model: provConf.model || conf.model || ""
+        });
+        
+        if (result.ok) {
+          dot.style.background = "#10b981";
+          text.textContent = "Conectado";
+          text.style.color = "#10b981";
+          container.title = "Conexión exitosa. Haz clic para volver a comprobar.";
+        } else {
+          dot.style.background = "#ef4444";
+          text.textContent = "Desconectado";
+          text.style.color = "#ef4444";
+          container.title = `Error: ${result.error || "Error de conexión"}. Haz clic para volver a comprobar.`;
+        }
+      } catch (err) {
+        const dot = document.getElementById("conn-status-dot");
+        const text = document.getElementById("conn-status-text");
+        const container = document.getElementById("sb-conn-status");
+        if (dot && text && container) {
+          dot.style.background = "#ef4444";
+          text.textContent = "Desconectado";
+          text.style.color = "#ef4444";
+          container.title = `Error: ${err.message || String(err)}. Haz clic para volver a comprobar.`;
+        }
+      }
+    }
+
+    document.getElementById("sb-conn-status").addEventListener("click", checkConnectionStatus);
 
     function escapeHtml(value) {
       return String(value || "")

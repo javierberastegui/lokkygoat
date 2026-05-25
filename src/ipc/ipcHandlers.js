@@ -124,7 +124,9 @@ function setupIpcHandlers() {
     const config = getConfig();
     if (config.provider === "hermes") {
       try {
-        const state = await hermesProvider.getCompanionState(config);
+        const providerConfig = config.providers?.hermes || {};
+        const activeConfig = { ...config, ...providerConfig };
+        const state = await hermesProvider.getCompanionState(activeConfig);
         return state;
       } catch (err) {
         return {
@@ -241,6 +243,98 @@ function setupIpcHandlers() {
       }, 4000);
 
       return `Error: ${err.message}`;
+    }
+  });
+
+  ipcMain.handle("app:test-provider-connection", async (event, testPayload) => {
+    const { provider, apiKey, apiUrl, model } = testPayload;
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+      
+      let res;
+      if (provider === "ollama") {
+        const checkUrl = apiUrl || "http://127.0.0.1:11434";
+        res = await fetch(`${checkUrl}/`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (res.ok || res.status === 200 || res.status === 404) {
+          return { ok: true };
+        }
+        throw new Error(`Servidor Ollama respondió con código ${res.status}`);
+      } else if (provider === "hermes") {
+        const checkUrl = apiUrl || "http://127.0.0.1:9119";
+        res = await fetch(`${checkUrl}/api/companion/state`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ok) return { ok: true };
+        }
+        throw new Error(`Servidor Hermes respondió con error`);
+      } else if (provider === "openai" || provider === "openclaw" || provider === "codex" || provider === "custom") {
+        let checkUrl = "https://api.openai.com/v1/models";
+        if (apiUrl) {
+          checkUrl = apiUrl.endsWith("/chat/completions") 
+            ? apiUrl.replace("/chat/completions", "/models") 
+            : apiUrl;
+          if (!checkUrl.includes("/models")) {
+            checkUrl = checkUrl.endsWith("/") ? `${checkUrl}models` : `${checkUrl}/models`;
+          }
+        }
+        const headers = {};
+        if (apiKey) {
+          headers["Authorization"] = `Bearer ${apiKey}`;
+        }
+        res = await fetch(checkUrl, { headers, signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          return { ok: true };
+        }
+        const text = await res.text();
+        let errMsg = `Error ${res.status}`;
+        try {
+          const parsedErr = JSON.parse(text);
+          if (parsedErr.error && parsedErr.error.message) {
+            errMsg = parsedErr.error.message;
+          }
+        } catch (_) {}
+        throw new Error(errMsg);
+      } else if (provider === "claude") {
+        const checkUrl = apiUrl || "https://api.anthropic.com/v1/messages";
+        const headers = {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01"
+        };
+        const body = {
+          model: model || "claude-3-5-sonnet-latest",
+          messages: [{ role: "user", content: "ping" }],
+          max_tokens: 1
+        };
+        res = await fetch(checkUrl, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(body),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          return { ok: true };
+        }
+        const text = await res.text();
+        let errMsg = `Error ${res.status}`;
+        try {
+          const parsedErr = JSON.parse(text);
+          if (parsedErr.error && parsedErr.error.message) {
+            errMsg = parsedErr.error.message;
+          }
+        } catch (_) {}
+        throw new Error(errMsg);
+      } else {
+        clearTimeout(timeoutId);
+        throw new Error(`Proveedor ${provider} no soportado para test`);
+      }
+    } catch (err) {
+      return { ok: false, error: err.message || String(err) };
     }
   });
 }
